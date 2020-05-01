@@ -1,0 +1,360 @@
+{
+  "workflow": {
+    "unique_name": "definition_workflow_01FHYIQIA02IZ7TbbMTkFzeZqVDNU2jLcMh",
+    "name": "Run UCSD Workflow",
+    "title": "Run UCSD Workflow",
+    "type": "generic.workflow",
+    "base_type": "workflow",
+    "variables": [
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "75F132F28D504DD59DDABD64A98AE1F3",
+          "scope": "local",
+          "name": "UCSD-APIKey",
+          "type": "datatype.string",
+          "is_required": false
+        },
+        "unique_name": "variable_workflow_01FHYL4993MN0068XxWbK8gWWeHIYc8iHBq",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "",
+          "scope": "local",
+          "name": "ServiceStatus",
+          "type": "datatype.string",
+          "is_required": false
+        },
+        "unique_name": "variable_workflow_01FIIRNDW1CJ23YmPymDdRsGIJ4HE9mQwlJ",
+        "object_type": "variable_workflow"
+      }
+    ],
+    "properties": {
+      "atomic": {
+        "is_atomic": false
+      },
+      "delete_workflow_instance": false,
+      "display_name": "Run UCSD Workflow",
+      "runtime_user": {
+        "override_target_runtime_user": false,
+        "specify_on_workflow_start": false,
+        "target_default": true
+      },
+      "target": {
+        "target_type": "web-service.endpoint",
+        "target_id": "definition_target_01FHYNOV92UOP7lzOF8taxOxJFmWYiUZzqE",
+        "execute_on_workflow_target": true
+      }
+    },
+    "object_type": "definition_workflow",
+    "actions": [
+      {
+        "unique_name": "definition_activity_01FHZ4MYCFLC43pO4GnmayR1uqznTfrUW9s",
+        "name": "HTTP Request",
+        "title": "Submit Workflow API",
+        "type": "web-service.http_request",
+        "base_type": "activity",
+        "properties": {
+          "action_timeout": 180,
+          "allow_auto_redirect": true,
+          "continue_on_error_status_code": false,
+          "continue_on_failure": false,
+          "custom_headers": [
+            {
+              "name": "$global.variable_01g4itdQW73Y0cMTQEcTsUdc5XRrudSHi.global.variable_01g4itdQW73Y0cMTQEcTsUdc5XRrudSHi$",
+              "value": "$workflow.definition_workflow_01FHYIQIA02IZ7TbbMTkFzeZqVDNU2jLcMh.local.variable_workflow_01FHYL4993MN0068XxWbK8gWWeHIYc8iHBq$"
+            }
+          ],
+          "display_name": "Submit Workflow API",
+          "method": "POST",
+          "relative_url": "/app/api/rest?formatType=json\u0026opName=userAPISubmitWorkflowServiceRequest\u0026opData={param0:\"SendMail\",param1:{\"list\":[{\"name\":\"Message\",\"value\":\"sample\"},{\"name\":\"Subject\",\"value\":\"sample\"}]},param2:1000}",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "use_workflow_target": true
+          }
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01FHZOG2TSZQB2Of9a6C2hiJMU36OLLYWon",
+        "name": "JSONPath Query",
+        "title": "Get Service Request ID",
+        "type": "corejava.jsonpathquery",
+        "base_type": "activity",
+        "properties": {
+          "action_timeout": 180,
+          "continue_on_failure": false,
+          "display_name": "Get Service Request ID",
+          "input_json": "$activity.definition_activity_01FHZ4MYCFLC43pO4GnmayR1uqznTfrUW9s.output.response_body$",
+          "jsonpath_queries": [
+            {
+              "jsonpath_query": ".serviceResult",
+              "jsonpath_query_name": "ServiceID",
+              "jsonpath_query_type": "string"
+            }
+          ],
+          "skip_execution": false
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01FIIL47KSJ983iO8MzaiCnNyykSzGRWDiv",
+        "name": "HTTP Request",
+        "title": "Get Service Request Details API",
+        "type": "web-service.http_request",
+        "base_type": "activity",
+        "properties": {
+          "action_timeout": 180,
+          "allow_auto_redirect": true,
+          "continue_on_error_status_code": false,
+          "continue_on_failure": false,
+          "custom_headers": [
+            {
+              "name": "$global.variable_01g4itdQW73Y0cMTQEcTsUdc5XRrudSHi.global.variable_01g4itdQW73Y0cMTQEcTsUdc5XRrudSHi$",
+              "value": "$workflow.definition_workflow_01FHYIQIA02IZ7TbbMTkFzeZqVDNU2jLcMh.local.variable_workflow_01FHYL4993MN0068XxWbK8gWWeHIYc8iHBq$"
+            }
+          ],
+          "display_name": "Get Service Request Details API",
+          "method": "GET",
+          "relative_url": "/app/api/rest?formatType=json\u0026opName=userAPIGetServiceRequestDetails\u0026opData={param0:$activity.definition_activity_01FHZOG2TSZQB2Of9a6C2hiJMU36OLLYWon.output.jsonpath_queries.ServiceID$}",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "use_workflow_target": true
+          }
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01FIIMTGQ6OIO1QJzUJ6El3jTyJg8K5k4FF",
+        "name": "JSONPath Query",
+        "title": "Get Service Request Status",
+        "type": "corejava.jsonpathquery",
+        "base_type": "activity",
+        "properties": {
+          "action_timeout": 180,
+          "continue_on_failure": false,
+          "display_name": "Get Service Request Status",
+          "input_json": "$activity.definition_activity_01FIIL47KSJ983iO8MzaiCnNyykSzGRWDiv.output.response_body$",
+          "jsonpath_queries": [
+            {
+              "jsonpath_query": ".status",
+              "jsonpath_query_name": "ServiceStatus",
+              "jsonpath_query_type": "string"
+            }
+          ],
+          "skip_execution": false
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01FIJ97S79BA05iQXIWgRxfXEweqMNX2F5B",
+        "name": "Set Variables",
+        "title": "Set Variables",
+        "type": "core.set_multiple_variables",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Set Variables",
+          "skip_execution": false,
+          "variables_to_update": [
+            {
+              "variable_to_update": "$workflow.definition_workflow_01FHYIQIA02IZ7TbbMTkFzeZqVDNU2jLcMh.local.variable_workflow_01FIIRNDW1CJ23YmPymDdRsGIJ4HE9mQwlJ$",
+              "variable_value_new": "$activity.definition_activity_01FIIMTGQ6OIO1QJzUJ6El3jTyJg8K5k4FF.output.jsonpath_queries.ServiceStatus$"
+            }
+          ]
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01FIJ45RQEEFY4A3rLuniA7tst6f8XhyDbH",
+        "name": "While Loop",
+        "title": "Check Service Status",
+        "type": "logic.while",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Check Service Status",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01FIJ45TCFT4N22DLZf9t8UkSAQ44hTwjyg",
+            "name": "Condition Branch",
+            "title": "Still Running",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": {
+                  "left_operand": "$workflow.definition_workflow_01FHYIQIA02IZ7TbbMTkFzeZqVDNU2jLcMh.local.variable_workflow_01FIIRNDW1CJ23YmPymDdRsGIJ4HE9mQwlJ$",
+                  "operator": "eq",
+                  "right_operand": "Submitted"
+                },
+                "operator": "or",
+                "right_operand": {
+                  "left_operand": "$workflow.definition_workflow_01FHYIQIA02IZ7TbbMTkFzeZqVDNU2jLcMh.local.variable_workflow_01FIIRNDW1CJ23YmPymDdRsGIJ4HE9mQwlJ$",
+                  "operator": "eq",
+                  "right_operand": "In Progress"
+                }
+              },
+              "continue_on_failure": false,
+              "display_name": "Still Running",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01FIJ0RKX419N3isegcJKlCuVBld2gQ5EFK",
+                "name": "Sleep",
+                "title": "Sleep",
+                "type": "core.sleep",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Sleep",
+                  "skip_execution": false,
+                  "sleep_interval": 10
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01FIJ0YHRMU5461UsFyqmTWJ8m3Yy3qheEp",
+                "name": "HTTP Request",
+                "title": "Get Service Request Details API",
+                "type": "web-service.http_request",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "allow_auto_redirect": true,
+                  "continue_on_error_status_code": false,
+                  "continue_on_failure": false,
+                  "custom_headers": [
+                    {
+                      "name": "$global.variable_01g4itdQW73Y0cMTQEcTsUdc5XRrudSHi.global.variable_01g4itdQW73Y0cMTQEcTsUdc5XRrudSHi$",
+                      "value": "$workflow.definition_workflow_01FHYIQIA02IZ7TbbMTkFzeZqVDNU2jLcMh.local.variable_workflow_01FHYL4993MN0068XxWbK8gWWeHIYc8iHBq$"
+                    }
+                  ],
+                  "display_name": "Get Service Request Details API",
+                  "method": "GET",
+                  "relative_url": "/app/api/rest?formatType=json\u0026opName=userAPIGetServiceRequestDetails\u0026opData={param0:$activity.definition_activity_01FHZOG2TSZQB2Of9a6C2hiJMU36OLLYWon.output.jsonpath_queries.ServiceID$}",
+                  "runtime_user": {
+                    "override_target_runtime_user": false,
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "use_workflow_target": true
+                  }
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01FIJA6A783SF6C96tMqxXvbXMmVP0lR89x",
+                "name": "JSONPath Query",
+                "title": "Get Service Request Status",
+                "type": "corejava.jsonpathquery",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "continue_on_failure": false,
+                  "display_name": "Get Service Request Status",
+                  "input_json": "$activity.definition_activity_01FIJ0YHRMU5461UsFyqmTWJ8m3Yy3qheEp.output.response_body$",
+                  "jsonpath_queries": [
+                    {
+                      "jsonpath_query": ".status",
+                      "jsonpath_query_name": "ServiceStatus",
+                      "jsonpath_query_type": "string"
+                    }
+                  ],
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01FIJATR6VGMI2Wmqi3fpO0ksW0tk5jLzgR",
+                "name": "Set Variables",
+                "title": "Save Status",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Save Status",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01FHYIQIA02IZ7TbbMTkFzeZqVDNU2jLcMh.local.variable_workflow_01FIIRNDW1CJ23YmPymDdRsGIJ4HE9mQwlJ$",
+                      "variable_value_new": "$activity.definition_activity_01FIJA6A783SF6C96tMqxXvbXMmVP0lR89x.output.jsonpath_queries.ServiceStatus$"
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "categories": [
+      "category_1BMfMXSnJMyt5Ihqi7rWJr5N8cf"
+    ]
+  },
+  "targets": {
+    "definition_target_01FHYNOV92UOP7lzOF8taxOxJFmWYiUZzqE": {
+      "unique_name": "definition_target_01FHYNOV92UOP7lzOF8taxOxJFmWYiUZzqE",
+      "name": "UCSD-SDLab",
+      "title": "UCSD-SDLab",
+      "type": "web-service.endpoint",
+      "base_type": "target",
+      "object_type": "definition_target",
+      "properties": {
+        "default_runtime_user_id": "definition_runtime_user_01FHYN6KL7AWK3P6MmQH5EsGMqwFm4vO5to",
+        "disable_certificate_validation": true,
+        "display_name": "UCSD-SDLab",
+        "host": "10.15.8.6",
+        "no_runtime_user": false,
+        "port": 443,
+        "protocol": "https"
+      }
+    }
+  },
+  "runtime_users": {
+    "definition_runtime_user_01FHYN6KL7AWK3P6MmQH5EsGMqwFm4vO5to": {
+      "unique_name": "definition_runtime_user_01FHYN6KL7AWK3P6MmQH5EsGMqwFm4vO5to",
+      "name": "admin",
+      "title": "admin",
+      "type": "runtime_user.web-service_basic_credentials",
+      "base_type": "runtime_user",
+      "object_type": "definition_runtime_user",
+      "properties": {
+        "auth_option": "*****",
+        "basic_password": "*****",
+        "basic_username": "*****",
+        "display_name": "admin"
+      }
+    }
+  },
+  "variables": {
+    "variable_01g4itdQW73Y0cMTQEcTsUdc5XRrudSHi": {
+      "unique_name": "variable_01g4itdQW73Y0cMTQEcTsUdc5XRrudSHi",
+      "properties": {
+        "value": "X-Cloupia-Request-Key",
+        "scope": "global",
+        "name": "UCS Director API Key",
+        "type": "datatype.string",
+        "is_required": false
+      },
+      "object_type": "variable"
+    }
+  }
+}
