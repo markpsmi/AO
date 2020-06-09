@@ -1,0 +1,532 @@
+{
+  "workflow": {
+    "unique_name": "definition_workflow_01GFQ4KSSJ9XC3SfsNEdzXpfRUGUGl9Gwu2",
+    "name": "RBC Demo",
+    "title": "RBC Demo",
+    "type": "generic.workflow",
+    "base_type": "workflow",
+    "variables": [
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "admin",
+          "scope": "local",
+          "name": "User Name",
+          "type": "datatype.string",
+          "is_required": false
+        },
+        "unique_name": "variable_workflow_01GFQ5N8RMWD46hiSHW9OjS7ydwXgoq6zHM",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.secure_string",
+        "properties": {
+          "value": "*****",
+          "scope": "local",
+          "name": "Password",
+          "type": "datatype.secure_string",
+          "is_required": false
+        },
+        "unique_name": "variable_workflow_01GFQ65JD7ECH6Mox0cNi9u5p3fsWQEEdqg",
+        "object_type": "variable_workflow"
+      }
+    ],
+    "properties": {
+      "atomic": {
+        "is_atomic": false
+      },
+      "delete_workflow_instance": false,
+      "display_name": "RBC Demo",
+      "runtime_user": {
+        "override_target_runtime_user": false,
+        "specify_on_workflow_start": false,
+        "target_default": true
+      },
+      "target": {
+        "target_type": "web-service.endpoint",
+        "target_id": "definition_target_01G6HW55N6F475A6uirYkRZMxI6xsjqhf0v",
+        "execute_on_workflow_target": true
+      }
+    },
+    "object_type": "definition_workflow",
+    "actions": [
+      {
+        "unique_name": "definition_activity_01GFQ50JE7A1P41Bcox3vsfjHAXV78JwaNG",
+        "name": "Get Access Token",
+        "title": "Get Access Token",
+        "type": "workflow.atomic_workflow",
+        "base_type": "subworkflow",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Get Access Token",
+          "input": {
+            "variable_workflow_01gRbBzC6y65ilW690WbXhKOxVVEFAWak": "$workflow.definition_workflow_01GFQ4KSSJ9XC3SfsNEdzXpfRUGUGl9Gwu2.local.variable_workflow_01GFQ5N8RMWD46hiSHW9OjS7ydwXgoq6zHM$",
+            "variable_workflow_01gRbcbVNXvwNc0xy6oSxfLv1IMlF4e8W": "$workflow.definition_workflow_01GFQ4KSSJ9XC3SfsNEdzXpfRUGUGl9Gwu2.local.variable_workflow_01GFQ65JD7ECH6Mox0cNi9u5p3fsWQEEdqg$"
+          },
+          "runtime_user": {
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "target_type": "01FN0W5T5TS253fMY0lpKamJLiFSLRQhTNQ",
+            "use_workflow_target": true
+          },
+          "workflow_id": "definition_workflow_01gRBIJ4lT0J8qCi0CcrG0bvgGO8oehuN"
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01GFQ7Y6ODGWV1lLpGsbUK73ZM5B11doBF8",
+        "name": "Create Tenant",
+        "title": "Create Tenant",
+        "type": "workflow.atomic_workflow",
+        "base_type": "subworkflow",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Create Tenant",
+          "input": {
+            "variable_workflow_01gT1eyO4nbqZgpue94dU70UcFBp7AyZW": "RBC",
+            "variable_workflow_01gsnF9Reqp3eXbZHWnp4iGqNuaeAP2Gd": "$activity.definition_activity_01GFQ50JE7A1P41Bcox3vsfjHAXV78JwaNG.output.variable_workflow_01gRCX1ylwvVGzqIKjoLIg04d3smgS7fS$",
+            "variable_workflow_01gsnt2Y71XcG6yui8wJQbvu0uOfUad8y": "$global.variable_01GF02UP5PAKP6sGqND2jY79mt4NIzbzwN8.global.variable_01GF02UP5PAKP6sGqND2jY79mt4NIzbzwN8$$activity.definition_activity_01GFQ50JE7A1P41Bcox3vsfjHAXV78JwaNG.output.variable_workflow_01gRbEjEFEdeUwHe8H3oRrxdlHMSlQvFD$"
+          },
+          "runtime_user": {
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "target_type": "01FN0W5T5TS253fMY0lpKamJLiFSLRQhTNQ",
+            "use_workflow_target": true
+          },
+          "workflow_id": "definition_workflow_01gSZhunoTp5AEnITcXSV7ryRFS6i2pCG"
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01GFQK4OJHXM141S2DJHbpb0lQKD6Wr5MFg",
+        "name": "Run Ansible Playbook",
+        "title": "Run Ansible Playbook",
+        "type": "workflow.sub_workflow",
+        "base_type": "subworkflow",
+        "properties": {
+          "display_name": "Run Ansible Playbook",
+          "runtime_user": {
+            "target_default": true
+          },
+          "target": {
+            "no_target": true
+          },
+          "workflow_id": "definition_workflow_01GF2BXDGIN8C4n1WE4X3xsMwxnpuRpuqhy"
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01GFQKFACH7JX5EUvaLebNfInjWb8gN3I8v",
+        "name": "Sample Approval",
+        "title": "Sample Approval",
+        "type": "workflow.sub_workflow",
+        "base_type": "subworkflow",
+        "properties": {
+          "display_name": "Sample Approval",
+          "input": {
+            "variable_workflow_019P7IQUVQ7TS5wCRKBdwi5diOGDiIObvlU": "",
+            "variable_workflow_019W6SXEW38QG6WdovEkZtVI3dneAXuCTBH": "",
+            "variable_workflow_019W6T3I1I9WP4GIZ3YCgy0b8s3A25vXqQ4": false
+          },
+          "runtime_user": {
+            "target_default": true
+          },
+          "target": {
+            "no_target": true
+          },
+          "workflow_id": "definition_workflow_019CH6YBBIA0E2PD80VDmbTNc2zaFwfaft5"
+        },
+        "object_type": "definition_activity"
+      }
+    ],
+    "categories": [
+      "category_1BMfMXSnJMyt5Ihqi7rWJr5N8cf"
+    ]
+  },
+  "targets": {
+    "definition_target_01G6HW55N6F475A6uirYkRZMxI6xsjqhf0v": {
+      "unique_name": "definition_target_01G6HW55N6F475A6uirYkRZMxI6xsjqhf0v",
+      "name": "APIC-SDlab",
+      "title": "APIC-SDlab",
+      "type": "web-service.endpoint",
+      "base_type": "target",
+      "object_type": "definition_target",
+      "properties": {
+        "disable_certificate_validation": true,
+        "display_name": "APIC-SDlab",
+        "host": "10.95.33.232",
+        "no_runtime_user": true,
+        "path": "/api",
+        "port": 443,
+        "protocol": "https"
+      }
+    },
+    "definition_target_01GF2BRDIC6OE2Y3pCClUcPwGHCqSmg3LV7": {
+      "unique_name": "definition_target_01GF2BRDIC6OE2Y3pCClUcPwGHCqSmg3LV7",
+      "name": "ielwr-jumpbox-1.cisco.com",
+      "title": "ielwr-jumpbox-1.cisco.com",
+      "type": "terminal.unix_linux_endpoint",
+      "base_type": "target",
+      "object_type": "definition_target",
+      "properties": {
+        "bash_shell": "/bin/bash",
+        "default_runtime_user_id": "definition_runtime_user_01GF2BJ06UIBB7OdHnwzr0zKe5TFp5HHEbj",
+        "display_name": "ielwr-jumpbox-1.cisco.com",
+        "host": "ielwr-jumpbox-1.cisco.com",
+        "port": 22
+      }
+    }
+  },
+  "runtime_users": {
+    "definition_runtime_user_01GF2BJ06UIBB7OdHnwzr0zKe5TFp5HHEbj": {
+      "unique_name": "definition_runtime_user_01GF2BJ06UIBB7OdHnwzr0zKe5TFp5HHEbj",
+      "name": "markpsmi",
+      "title": "markpsmi",
+      "type": "runtime_user.terminal_password_credentials",
+      "base_type": "runtime_user",
+      "object_type": "definition_runtime_user",
+      "properties": {
+        "display_name": "markpsmi",
+        "password": "*****",
+        "user": "*****"
+      }
+    }
+  },
+  "variables": {
+    "variable_01GF02UP5PAKP6sGqND2jY79mt4NIzbzwN8": {
+      "unique_name": "variable_01GF02UP5PAKP6sGqND2jY79mt4NIzbzwN8",
+      "properties": {
+        "value": "APIC-cookie=",
+        "scope": "global",
+        "name": "Apic Cookie",
+        "type": "datatype.string",
+        "is_required": false
+      },
+      "object_type": "variable"
+    }
+  },
+  "subworkflows": [
+    {
+      "workflow": {
+        "unique_name": "definition_workflow_01GF2BXDGIN8C4n1WE4X3xsMwxnpuRpuqhy",
+        "name": "Run Ansible Playbook",
+        "title": "Run Ansible Playbook",
+        "type": "generic.workflow",
+        "base_type": "workflow",
+        "variables": null,
+        "properties": {
+          "atomic": {
+            "is_atomic": false
+          },
+          "delete_workflow_instance": false,
+          "display_name": "Run Ansible Playbook",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "specify_on_workflow_start": false,
+            "target_default": true
+          },
+          "target": {
+            "execute_on_target_group": false,
+            "execute_on_workflow_target": false,
+            "no_target": true,
+            "specify_on_workflow_start": false
+          }
+        },
+        "object_type": "definition_workflow",
+        "actions": [
+          {
+            "unique_name": "definition_activity_01GF2CCPJ4DEB4o97uNmypTVkV2EeoF5jjv",
+            "name": "Execute Linux/Unix SSH Command",
+            "title": "Execute Linux/Unix SSH Command",
+            "type": "terminal.ssh_command",
+            "base_type": "activity",
+            "properties": {
+              "action_timeout": 180,
+              "command": "ansible-playbook /tmp/helloworld.yml",
+              "command_timeout": 60,
+              "continue_on_failure": false,
+              "display_name": "Execute Linux/Unix SSH Command",
+              "runtime_user": {
+                "override_target_runtime_user": false,
+                "target_default": true
+              },
+              "skip_execution": false,
+              "target": {
+                "override_workflow_target": true,
+                "target_id": "definition_target_01GF2BRDIC6OE2Y3pCClUcPwGHCqSmg3LV7"
+              }
+            },
+            "object_type": "definition_activity"
+          }
+        ],
+        "categories": [
+          "category_1BMfMXSnJMyt5Ihqi7rWJr5N8cf"
+        ]
+      }
+    },
+    {
+      "workflow": {
+        "unique_name": "definition_workflow_019CH6YBBIA0E2PD80VDmbTNc2zaFwfaft5",
+        "name": "Sample Approval",
+        "title": "Sample Approval",
+        "type": "generic.workflow",
+        "base_type": "workflow",
+        "variables": [
+          {
+            "schema_id": "datatype.string",
+            "properties": {
+              "value": "",
+              "scope": "input",
+              "name": "Requestor",
+              "type": "datatype.string",
+              "is_required": false
+            },
+            "unique_name": "variable_workflow_019W6SXEW38QG6WdovEkZtVI3dneAXuCTBH",
+            "object_type": "variable_workflow"
+          },
+          {
+            "schema_id": "datatype.boolean",
+            "properties": {
+              "value": false,
+              "scope": "input",
+              "name": "Owner",
+              "type": "datatype.boolean",
+              "is_required": false
+            },
+            "unique_name": "variable_workflow_019W6T3I1I9WP4GIZ3YCgy0b8s3A25vXqQ4",
+            "object_type": "variable_workflow"
+          },
+          {
+            "schema_id": "datatype.string",
+            "properties": {
+              "value": "",
+              "scope": "local",
+              "name": "Status",
+              "type": "datatype.string",
+              "is_required": false
+            },
+            "unique_name": "variable_workflow_019CI2RHQ0UPP7FFGgm5zaOnO7kEYtytkKr",
+            "object_type": "variable_workflow"
+          },
+          {
+            "schema_id": "datatype.string",
+            "properties": {
+              "value": "",
+              "scope": "input",
+              "name": "Assignee",
+              "type": "datatype.string",
+              "is_required": false
+            },
+            "unique_name": "variable_workflow_019P7IQUVQ7TS5wCRKBdwi5diOGDiIObvlU",
+            "object_type": "variable_workflow"
+          }
+        ],
+        "properties": {
+          "atomic": {
+            "is_atomic": false
+          },
+          "delete_workflow_instance": false,
+          "description": "This workflow demonstrates how to create an approval request that is to be approved by \"Assignee\" and the \"Requestor\" and \"Owner\" can both see the task status. These should be emails of the users in your tenant.\n\nThe workflow will wait for the approval to complete.",
+          "display_name": "Sample Approval",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "specify_on_workflow_start": false,
+            "target_default": true
+          },
+          "target": {
+            "execute_on_target_group": false,
+            "execute_on_workflow_target": false,
+            "no_target": true,
+            "specify_on_workflow_start": false
+          }
+        },
+        "object_type": "definition_workflow",
+        "actions": [
+          {
+            "unique_name": "definition_activity_019CH7L8M8AMY4HVfUdNfHK3OEdBJPj8qr7",
+            "name": "Create Approval Request",
+            "title": "Create Approval Request",
+            "type": "task.approval_request",
+            "base_type": "activity",
+            "properties": {
+              "approval_choices": [
+                "Approve",
+                "Reject"
+              ],
+              "assignees": [
+                "$workflow.definition_workflow_019CH6YBBIA0E2PD80VDmbTNc2zaFwfaft5.input.variable_workflow_019P7IQUVQ7TS5wCRKBdwi5diOGDiIObvlU$"
+              ],
+              "continue_on_failure": false,
+              "display_name": "Create Approval Request",
+              "due_date": {
+                "is_relative_time": true,
+                "relative_time": {
+                  "duration": 15,
+                  "time_units": "days"
+                },
+                "set_due_date": true
+              },
+              "expiration_date": {
+                "is_relative_time": true,
+                "is_specified_date": false,
+                "relative_time": {
+                  "duration": 15,
+                  "time_units": "days"
+                }
+              },
+              "expiration_status": "Expired",
+              "minimum_approvals": 1,
+              "priority": "high",
+              "skip_execution": false,
+              "subject_line": "Issue requries your approval",
+              "task_message": "Hello user, this issue requires your approval",
+              "task_owner": "$workflow.definition_workflow_019CH6YBBIA0E2PD80VDmbTNc2zaFwfaft5.input.variable_workflow_019W6T3I1I9WP4GIZ3YCgy0b8s3A25vXqQ4$",
+              "task_requestor": "$workflow.definition_workflow_019CH6YBBIA0E2PD80VDmbTNc2zaFwfaft5.input.variable_workflow_019W6SXEW38QG6WdovEkZtVI3dneAXuCTBH$"
+            },
+            "object_type": "definition_activity"
+          },
+          {
+            "unique_name": "definition_activity_019CHVQRDR1VD5TjE6bJEBbFhORflRljwG6",
+            "name": "Wait For Event",
+            "title": "Wait For Event",
+            "type": "task.wait_for_event",
+            "base_type": "activity",
+            "properties": {
+              "continue_on_failure": false,
+              "display_name": "Wait For Event",
+              "event_info": {
+                "add_event": true,
+                "event_definition": {
+                  "conditions": {
+                    "left_operand": "$output.status.state$",
+                    "operator": "eqi",
+                    "right_operand": "completed"
+                  }
+                }
+              },
+              "event_type": "approval_task.event",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity"
+          },
+          {
+            "unique_name": "definition_activity_019CI0JGYG9R15m61MGDYM1txagBcKNlYtU",
+            "name": "Condition Block",
+            "title": "Condition Block",
+            "type": "logic.if_else",
+            "base_type": "activity",
+            "properties": {
+              "continue_on_failure": false,
+              "display_name": "Condition Block",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "blocks": [
+              {
+                "unique_name": "definition_activity_019CI0JJLA6JU0yvLA2OJDnUylTHtaCFGTm",
+                "name": "Condition Branch",
+                "title": "Condition Branch",
+                "type": "logic.condition_block",
+                "base_type": "activity",
+                "properties": {
+                  "condition": {
+                    "left_operand": "$activity.definition_activity_019CHVQRDR1VD5TjE6bJEBbFhORflRljwG6.output.response$",
+                    "operator": "eq",
+                    "right_operand": "Approve"
+                  },
+                  "continue_on_failure": false,
+                  "display_name": "Condition Branch",
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity",
+                "actions": [
+                  {
+                    "unique_name": "definition_activity_019CI2TFX1CXA6Tbfoba2BVBssNDgb28d9M",
+                    "name": "Set Variables",
+                    "title": "Set Variables",
+                    "type": "core.set_multiple_variables",
+                    "base_type": "activity",
+                    "properties": {
+                      "continue_on_failure": false,
+                      "display_name": "Set Variables",
+                      "skip_execution": false,
+                      "variables_to_update": [
+                        {
+                          "variable_to_update": "$workflow.definition_workflow_019CH6YBBIA0E2PD80VDmbTNc2zaFwfaft5.local.variable_workflow_019CI2RHQ0UPP7FFGgm5zaOnO7kEYtytkKr$",
+                          "variable_value_new": "Approved"
+                        }
+                      ]
+                    },
+                    "object_type": "definition_activity"
+                  }
+                ]
+              },
+              {
+                "unique_name": "definition_activity_019CI0JKM16WO2RA6sMtj7GqcLoZWrndk9L",
+                "name": "Condition Branch",
+                "title": "Condition Branch",
+                "type": "logic.condition_block",
+                "base_type": "activity",
+                "properties": {
+                  "condition": {
+                    "left_operand": "$activity.definition_activity_019CHVQRDR1VD5TjE6bJEBbFhORflRljwG6.output.response$",
+                    "operator": "eq",
+                    "right_operand": "Reject"
+                  },
+                  "continue_on_failure": false,
+                  "display_name": "Condition Branch",
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity",
+                "actions": [
+                  {
+                    "unique_name": "definition_activity_019CI373SFY925PPzHidAteKT2VGJjRT38h",
+                    "name": "Set Variables",
+                    "title": "Set Variables",
+                    "type": "core.set_multiple_variables",
+                    "base_type": "activity",
+                    "properties": {
+                      "continue_on_failure": false,
+                      "display_name": "Set Variables",
+                      "skip_execution": false,
+                      "variables_to_update": [
+                        {
+                          "variable_to_update": "$workflow.definition_workflow_019CH6YBBIA0E2PD80VDmbTNc2zaFwfaft5.local.variable_workflow_019CI2RHQ0UPP7FFGgm5zaOnO7kEYtytkKr$",
+                          "variable_value_new": "Rejected"
+                        }
+                      ]
+                    },
+                    "object_type": "definition_activity"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "unique_name": "definition_activity_019CKYQR7TCLG0LkQLATfwHvlIXMhYAybsk",
+            "name": "Completed",
+            "title": "Completed",
+            "type": "logic.completed",
+            "base_type": "activity",
+            "properties": {
+              "completion_type": "succeeded",
+              "display_name": "Completed"
+            },
+            "object_type": "definition_activity"
+          }
+        ],
+        "categories": [
+          "category_1BMfMXSnJMyt5Ihqi7rWJr5N8cf"
+        ]
+      }
+    }
+  ],
+  "atomic_workflows": [
+    "definition_workflow_01gRBIJ4lT0J8qCi0CcrG0bvgGO8oehuN",
+    "definition_workflow_01gSZhunoTp5AEnITcXSV7ryRFS6i2pCG"
+  ]
+}
