@@ -1,0 +1,370 @@
+{
+  "workflow": {
+    "unique_name": "definition_workflow_01FHUYX9YXYPG6x4sTe1vzn5SuDkdYtCFCJ",
+    "name": "Run CCS WM Application Profile2",
+    "title": "Run CCS WM Application Profile2",
+    "type": "generic.workflow",
+    "base_type": "workflow",
+    "variables": [
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "",
+          "scope": "input",
+          "name": "Deployment Name",
+          "type": "datatype.string",
+          "is_required": false
+        },
+        "unique_name": "variable_workflow_01FHVBKV2MMU14a1RmTQUyyFbcCVKhJxRfx",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "",
+          "scope": "local",
+          "name": "JobStatus",
+          "type": "datatype.string",
+          "is_required": false
+        },
+        "unique_name": "variable_workflow_01FHVBUBCTAJ6036CS7p2f5D4lOk7Jd9oSx",
+        "object_type": "variable_workflow"
+      }
+    ],
+    "properties": {
+      "atomic": {
+        "is_atomic": false
+      },
+      "delete_workflow_instance": false,
+      "display_name": "Run CCS WM Application Profile2",
+      "runtime_user": {
+        "override_target_runtime_user": false,
+        "specify_on_workflow_start": false,
+        "target_default": true
+      },
+      "target": {
+        "execute_on_target_group": false,
+        "execute_on_workflow_target": false,
+        "no_target": true,
+        "specify_on_workflow_start": false
+      }
+    },
+    "object_type": "definition_workflow",
+    "actions": [
+      {
+        "unique_name": "definition_activity_01FHUZHSN4IWC69VH5FRluCJVg2IuUhU9At",
+        "name": "Generic CCS API Request",
+        "title": "Job Submit API",
+        "type": "ccs.api_request",
+        "base_type": "activity",
+        "properties": {
+          "action_timeout": 180,
+          "api_body": "{\n        \"appId\": 29,\n        \"appVersion\": \"1.0\",\n        \"name\": \"$workflow.definition_workflow_01FHUYX9YXYPG6x4sTe1vzn5SuDkdYtCFCJ.input.variable_workflow_01FHVBKV2MMU14a1RmTQUyyFbcCVKhJxRfx$\",\n        \"metadatas\": [\n                {\n                        \"id\": 7,\n                        \"namespace\": \"\",\n                        \"tagName\": \"Name\",\n                        \"tagCollectionId\": 7,\n                        \"value\": \"%JOB_NAME%\",\n                        \"required\": true,\n                        \"editable\": false,\n                        \"name\": \"Name\"\n                }\n        ],\n        \"environmentId\": \"1\",\n        \"tagIds\": [],\n        \"securityProfileIds\": null,\n        \"agingPolicyId\": null,\n        \"suspensionPolicyId\": null,\n        \"policyIds\": null,\n        \"preventTermination\": false,\n        \"parameters\": {\n                \"appParams\": [],\n                \"cloudParams\": {\n                        \"cloudRegionId\": \"1\",\n                        \"accountId\": \"1\"\n                }\n        },\n        \"jobs\": [\n                {\n                        \"tierId\": \"30\",\n                        \"policyIds\": null,\n                        \"tagIds\": [],\n                        \"securityProfileIds\": null,\n                        \"parameters\": {\n                                \"appParams\": [\n                                        {\n                                                \"name\": \"referredJob\",\n                                                \"value\": \"\"\n                                        },\n                                        {\n                                                \"name\": \"SSHPreference\",\n                                                \"value\": \"NO_PREFERENCE\"\n                                        }\n                                ],\n                                \"envParams\": [],\n                                \"cloudParams\": {\n                                        \"cloudRegionId\": \"1\",\n                                        \"accountId\": \"1\",\n                                        \"volumes\": [\n                                                {\n                                                        \"name\": \"RootVolume\",\n                                                        \"bootable\": true,\n                                                        \"size\": null,\n                                                        \"type\": \"storage-SDLab_vCenter-default\",\n                                                        \"iops\": null\n                                                }\n                                        ],\n                                        \"rootVolumeSize\": \"0\",\n                                        \"cloudProperties\": [\n                                                {\n                                                        \"name\": \"FullClone\",\n                                                        \"value\": \"true\"\n                                                },\n                                                {\n                                                        \"name\": \"UserDataCenterName\",\n                                                        \"value\": \"SDLab\"\n                                                },\n                                                {\n                                                        \"name\": \"UserClusterName\",\n                                                        \"value\": \"SDlab_Cluster1\"\n                                                },\n                                                {\n                                                        \"name\": \"UserDatastoreCluster\",\n                                                        \"value\": \"SDLab05\"\n                                                },\n                                                {\n                                                        \"name\": \"UserResourcePoolName\",\n                                                        \"value\": \"\"\n                                                },\n                                                {\n                                                        \"name\": \"VMGroup\",\n                                                        \"value\": \"\"\n                                                },\n                                                {\n                                                        \"name\": \"UserDatastore\",\n                                                        \"value\": \"\"\n                                                },\n                                                {\n                                                        \"name\": \"UserTargetDeploymentFolder\",\n                                                        \"value\": \"\"\n                                                },\n                                                {\n                                                        \"name\": \"CC_AUTO_SELECT_NETWORK\",\n                                                        \"value\": false\n                                                },\n                                                {\n                                                        \"name\": \"numNICs\",\n                                                        \"value\": \"\"\n                                                }\n                                        ],\n                                        \"nics\": [\n                                                {\n                                                        \"order\": 1,\n                                                        \"id\": \"VM Network\",\n                                                        \"type\": \"NETWORK\"\n                                                }\n                                        ],\n                                        \"instance\": \"default\"\n                                }\n                        },\n                        \"appServices\": [],\n                        \"numNodesToLaunch\": 1\n                }\n        ],\n        \"timeZone\": \"GMT-07:00\",\n        \"responseJobJaxbNotRequired\": true\n}",
+          "api_call_method": "POST",
+          "continue_on_failure": false,
+          "display_name": "Job Submit API",
+          "relative_url": "/cloudcenter-ccm-backend/api/v2/jobs",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "override_workflow_target": true,
+            "target_id": "definition_target_01FHV1BSZBL4Z1q60CqZSA9ZJDgXcmFlFD3"
+          }
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01FHVH3HN46870uzTgBeOe2nFt63K0FZAWE",
+        "name": "JSONPath Query",
+        "title": "Get Job ID",
+        "type": "corejava.jsonpathquery",
+        "base_type": "activity",
+        "properties": {
+          "action_timeout": 180,
+          "continue_on_failure": false,
+          "display_name": "Get Job ID",
+          "input_json": "$activity.definition_activity_01FHUZHSN4IWC69VH5FRluCJVg2IuUhU9At.output.response_body$",
+          "jsonpath_queries": [
+            {
+              "jsonpath_query": ".id",
+              "jsonpath_query_name": "JobID",
+              "jsonpath_query_type": "string"
+            }
+          ],
+          "skip_execution": false
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01FHVIBPJ5L4M4vkOyfhSP2MoptqKxHMph7",
+        "name": "Generic CCS API Request",
+        "title": "Get Job Info API",
+        "type": "ccs.api_request",
+        "base_type": "activity",
+        "properties": {
+          "action_timeout": 180,
+          "api_call_method": "GET",
+          "continue_on_failure": false,
+          "display_name": "Get Job Info API",
+          "relative_url": "/cloudcenter-ccm-backend/api/v2/jobs/$activity.definition_activity_01FHVH3HN46870uzTgBeOe2nFt63K0FZAWE.output.jsonpath_queries.JobID$",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "override_workflow_target": true,
+            "target_id": "definition_target_01FHV1BSZBL4Z1q60CqZSA9ZJDgXcmFlFD3"
+          }
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01FHVWQA529911gxvE68lcwtOhmFVkEIhkw",
+        "name": "JSONPath Query",
+        "title": "Get Job Status",
+        "type": "corejava.jsonpathquery",
+        "base_type": "activity",
+        "properties": {
+          "action_timeout": 180,
+          "continue_on_failure": false,
+          "display_name": "Get Job Status",
+          "input_json": "$activity.definition_activity_01FHVIBPJ5L4M4vkOyfhSP2MoptqKxHMph7.output.response_body$",
+          "jsonpath_queries": [
+            {
+              "jsonpath_query": ".status",
+              "jsonpath_query_name": "JobStatus",
+              "jsonpath_query_type": "string"
+            }
+          ],
+          "skip_execution": false
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01FHWW2E45RIC12ePOuYsyEXfgUQYY72ybN",
+        "name": "JSONPath Query",
+        "title": "Get Job Status 2",
+        "type": "corejava.jsonpathquery",
+        "base_type": "activity",
+        "properties": {
+          "action_timeout": 180,
+          "continue_on_failure": false,
+          "display_name": "Get Job Status 2",
+          "input_json": "$activity.definition_activity_01FHVWQA529911gxvE68lcwtOhmFVkEIhkw.output.jsonpath_queries.JobStatus$",
+          "jsonpath_queries": [
+            {
+              "jsonpath_query": ".[0]",
+              "jsonpath_query_name": "JobStatus2",
+              "jsonpath_query_type": "string"
+            }
+          ],
+          "skip_execution": false
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01FHVSZUWJ30M5WVGe6Wx1iPeWSu5QSvtrs",
+        "name": "Set Variables",
+        "title": "Save Job Status",
+        "type": "core.set_multiple_variables",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Save Job Status",
+          "skip_execution": false,
+          "variables_to_update": [
+            {
+              "variable_to_update": "$workflow.definition_workflow_01FHUYX9YXYPG6x4sTe1vzn5SuDkdYtCFCJ.local.variable_workflow_01FHVBUBCTAJ6036CS7p2f5D4lOk7Jd9oSx$",
+              "variable_value_new": "$activity.definition_activity_01FHWW2E45RIC12ePOuYsyEXfgUQYY72ybN.output.jsonpath_queries.JobStatus2$"
+            }
+          ]
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01FHVUFVJIMRM7Tcj0ROupSMZEwPHD6RdBX",
+        "name": "While Loop",
+        "title": "Check Job For Completion",
+        "type": "logic.while",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Check Job For Completion",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01FHVUFXZGOBO1AUN2mk7eaLtVitdfmOhCB",
+            "name": "Condition Branch",
+            "title": "Job Still Running",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": {
+                  "left_operand": "$workflow.definition_workflow_01FHUYX9YXYPG6x4sTe1vzn5SuDkdYtCFCJ.local.variable_workflow_01FHVBUBCTAJ6036CS7p2f5D4lOk7Jd9oSx$",
+                  "operator": "eq",
+                  "right_operand": "JobInProgress"
+                },
+                "operator": "or",
+                "right_operand": {
+                  "left_operand": "$workflow.definition_workflow_01FHUYX9YXYPG6x4sTe1vzn5SuDkdYtCFCJ.local.variable_workflow_01FHVBUBCTAJ6036CS7p2f5D4lOk7Jd9oSx$",
+                  "operator": "eq",
+                  "right_operand": "JobSubmitted"
+                }
+              },
+              "continue_on_failure": false,
+              "display_name": "Job Still Running",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01FHX0HK8M6IT3w2ZdeUYnG8oZuD2zwJSuv",
+                "name": "Sleep",
+                "title": "Sleep",
+                "type": "core.sleep",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Sleep",
+                  "skip_execution": false,
+                  "sleep_interval": 20
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01FHVWM1KV2KD22iqQpblSksqTTj9FsyV8Z",
+                "name": "Generic CCS API Request",
+                "title": "Get Job Info API",
+                "type": "ccs.api_request",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "api_call_method": "GET",
+                  "continue_on_failure": false,
+                  "display_name": "Get Job Info API",
+                  "relative_url": "/cloudcenter-ccm-backend/api/v2/jobs/$activity.definition_activity_01FHVH3HN46870uzTgBeOe2nFt63K0FZAWE.output.jsonpath_queries.JobID$",
+                  "runtime_user": {
+                    "override_target_runtime_user": false,
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_01FHV1BSZBL4Z1q60CqZSA9ZJDgXcmFlFD3"
+                  }
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01FHVJZYSFI457WM5kj0KxUvl4mO3wneTeO",
+                "name": "JSONPath Query",
+                "title": "Get Job Status",
+                "type": "corejava.jsonpathquery",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "continue_on_failure": false,
+                  "display_name": "Get Job Status",
+                  "input_json": "$activity.definition_activity_01FHVWM1KV2KD22iqQpblSksqTTj9FsyV8Z.output.response_body$",
+                  "jsonpath_queries": [
+                    {
+                      "jsonpath_query": ".status",
+                      "jsonpath_query_name": "JobStatus",
+                      "jsonpath_query_type": "string"
+                    }
+                  ],
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01FHWXHAB8N677H7WCnZioPQSVOPGO4s00O",
+                "name": "JSONPath Query",
+                "title": "Get Job Status 3",
+                "type": "corejava.jsonpathquery",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "continue_on_failure": false,
+                  "display_name": "Get Job Status 3",
+                  "input_json": "$activity.definition_activity_01FHVJZYSFI457WM5kj0KxUvl4mO3wneTeO.output.jsonpath_queries.JobStatus$",
+                  "jsonpath_queries": [
+                    {
+                      "jsonpath_query": ".[0]",
+                      "jsonpath_query_name": "JobStatus2",
+                      "jsonpath_query_type": "string"
+                    }
+                  ],
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01FHVWVQ7FM570YZytgJYpyEFFbCasDjlGc",
+                "name": "Set Variables",
+                "title": "Save Job Status",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Save Job Status",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01FHUYX9YXYPG6x4sTe1vzn5SuDkdYtCFCJ.local.variable_workflow_01FHVBUBCTAJ6036CS7p2f5D4lOk7Jd9oSx$",
+                      "variable_value_new": "$activity.definition_activity_01FHWXHAB8N677H7WCnZioPQSVOPGO4s00O.output.jsonpath_queries.JobStatus2$"
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "categories": [
+      "category_1BMfMXSnJMyt5Ihqi7rWJr5N8cf"
+    ]
+  },
+  "targets": {
+    "definition_target_01FHV1BSZBL4Z1q60CqZSA9ZJDgXcmFlFD3": {
+      "unique_name": "definition_target_01FHV1BSZBL4Z1q60CqZSA9ZJDgXcmFlFD3",
+      "name": "Cloud Center Suite",
+      "title": "Cloud Center Suite",
+      "type": "ccsuite.endpoint",
+      "base_type": "target",
+      "object_type": "definition_target",
+      "properties": {
+        "default_runtime_user_id": "definition_runtime_user_01FHV0XZOS04T7Q120kZ5x3dAtmOSA54G90",
+        "display_name": "Cloud Center Suite",
+        "host": "10.15.8.152",
+        "port": 443,
+        "protocol": "https"
+      }
+    }
+  },
+  "runtime_users": {
+    "definition_runtime_user_01FHV0XZOS04T7Q120kZ5x3dAtmOSA54G90": {
+      "unique_name": "definition_runtime_user_01FHV0XZOS04T7Q120kZ5x3dAtmOSA54G90",
+      "name": "marks",
+      "title": "marks",
+      "type": "runtime_user.ccs_explicit_user",
+      "base_type": "runtime_user",
+      "object_type": "definition_runtime_user",
+      "properties": {
+        "display_name": "marks",
+        "password": "*****",
+        "tenant_id": "*****",
+        "username": "*****"
+      }
+    }
+  }
+}
