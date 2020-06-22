@@ -1,0 +1,468 @@
+{
+  "workflow": {
+    "unique_name": "definition_workflow_01GHETC2ERS1A4AnC8jPl5PAeii7KvurTcJ",
+    "name": "Argentina Telecom AO POC",
+    "title": "Argentina Telecom AO POC",
+    "type": "generic.workflow",
+    "base_type": "workflow",
+    "variables": [
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "/home/markpsmi/DevicesVariables3.csv",
+          "scope": "input",
+          "name": "CSV Path and File Name",
+          "type": "datatype.string",
+          "is_required": false
+        },
+        "unique_name": "variable_workflow_01GLXDUR07J2J3920ZG7wyibvGJKjVrTZEF",
+        "object_type": "variable_workflow"
+      }
+    ],
+    "properties": {
+      "atomic": {
+        "is_atomic": false
+      },
+      "delete_workflow_instance": false,
+      "display_name": "Argentina Telecom AO POC",
+      "runtime_user": {
+        "override_target_runtime_user": false,
+        "specify_on_workflow_start": false,
+        "target_default": true
+      },
+      "target": {
+        "execute_on_target_group": false,
+        "execute_on_workflow_target": false,
+        "no_target": true,
+        "specify_on_workflow_start": false
+      }
+    },
+    "object_type": "definition_workflow",
+    "actions": [
+      {
+        "unique_name": "definition_activity_01GLXCOXBYOGE2ShpqJuy2osoKEEfYle5HD",
+        "name": "Read File",
+        "title": "Read File",
+        "type": "terminal.read_file",
+        "base_type": "activity",
+        "properties": {
+          "action_timeout": 180,
+          "continue_on_failure": false,
+          "display_name": "Read File",
+          "file_name": "$workflow.definition_workflow_01GHETC2ERS1A4AnC8jPl5PAeii7KvurTcJ.input.variable_workflow_01GLXDUR07J2J3920ZG7wyibvGJKjVrTZEF$",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "override_workflow_target": true,
+            "target_id": "definition_target_01GF2BRDIC6OE2Y3pCClUcPwGHCqSmg3LV7"
+          }
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01GLXEAFFQ2EZ2Q77EdQJf23TlJFB3iVaim",
+        "name": "Read Table from Text",
+        "title": "Read Table from Text",
+        "type": "core.read_table_from_text",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "delimiters": [
+            {
+              "delimiter": ","
+            }
+          ],
+          "display_name": "Read Table from Text",
+          "input_text": "$activity.definition_activity_01GLXCOXBYOGE2ShpqJuy2osoKEEfYle5HD.output.content$",
+          "persist_output": false,
+          "populate_columns": false,
+          "skip_execution": false,
+          "table_columns": [
+            {
+              "column_name": "DEVICE_NAME",
+              "column_type": "string"
+            },
+            {
+              "column_name": "DEVICE_IP",
+              "column_type": "string"
+            },
+            {
+              "column_name": "DEVICE_PORT",
+              "column_type": "string"
+            },
+            {
+              "column_name": "AUTHORIZAION_GROUP",
+              "column_type": "string"
+            },
+            {
+              "column_name": "HOST_NAME",
+              "column_type": "string"
+            },
+            {
+              "column_name": "HOST_NA_B1",
+              "column_type": "string"
+            },
+            {
+              "column_name": "HOST_NA_B2",
+              "column_type": "string"
+            },
+            {
+              "column_name": "IP_LOOPBACK_NTP_REG_1",
+              "column_type": "string"
+            },
+            {
+              "column_name": "IP_LOOPBACK_NTP_REG_2",
+              "column_type": "string"
+            },
+            {
+              "column_name": "IP_LOOPBACK0",
+              "column_type": "string"
+            },
+            {
+              "column_name": "HOST_INT_B1_L1",
+              "column_type": "string"
+            },
+            {
+              "column_name": "HOST_INT_B1_L2",
+              "column_type": "string"
+            },
+            {
+              "column_name": "HOST_INT_B2_L1",
+              "column_type": "string"
+            },
+            {
+              "column_name": "HOST_INT_B2_L2",
+              "column_type": "string"
+            },
+            {
+              "column_name": "B1_L1",
+              "column_type": "string"
+            },
+            {
+              "column_name": "B1_L2",
+              "column_type": "string"
+            },
+            {
+              "column_name": "B2_L1",
+              "column_type": "string"
+            },
+            {
+              "column_name": "B1_L2",
+              "column_type": "string"
+            },
+            {
+              "column_name": "B2_L1",
+              "column_type": "string"
+            },
+            {
+              "column_name": "B2_L2",
+              "column_type": "string"
+            },
+            {
+              "column_name": "HOST_NA_B1_INT_L1",
+              "column_type": "string"
+            },
+            {
+              "column_name": "HOST_NA_B1_INT_L2",
+              "column_type": "string"
+            },
+            {
+              "column_name": "HOST_NA_B2_INT_L1",
+              "column_type": "string"
+            },
+            {
+              "column_name": "HOST_NA_B2_INT_L2",
+              "column_type": "string"
+            },
+            {
+              "column_name": "LOCAL_IP_B1",
+              "column_type": "string"
+            },
+            {
+              "column_name": "LOCAL_IP_B2",
+              "column_type": "string"
+            },
+            {
+              "column_name": "REMOTE_IP_B1",
+              "column_type": "string"
+            },
+            {
+              "column_name": "REMOTE_IP_B2",
+              "column_type": "string"
+            },
+            {
+              "column_name": "AREA_OSPF",
+              "column_type": "string"
+            },
+            {
+              "column_name": "BGP_NB1",
+              "column_type": "string"
+            },
+            {
+              "column_name": "BGP_NB2_Desc",
+              "column_type": "string"
+            },
+            {
+              "column_name": "BGP_NB2",
+              "column_type": "string"
+            },
+            {
+              "column_name": "BGP_NB2_Desc",
+              "column_type": "string"
+            }
+          ]
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe",
+        "name": "For Each",
+        "title": "For Each",
+        "type": "logic.for_each",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "For Each",
+          "skip_execution": false,
+          "source_array": "$activity.definition_activity_01GLXEAFFQ2EZ2Q77EdQJf23TlJFB3iVaim.output.read_table_from_text$"
+        },
+        "object_type": "definition_activity",
+        "actions": [
+          {
+            "unique_name": "definition_activity_01GMJEW7CETI32xW5wJzx4AgdaL2jVkdsAD",
+            "name": "Condition Block",
+            "title": "Condition Block",
+            "type": "logic.if_else",
+            "base_type": "activity",
+            "properties": {
+              "continue_on_failure": false,
+              "display_name": "Condition Block",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "blocks": [
+              {
+                "unique_name": "definition_activity_01GMJEWEHFUDK7TiX8DdG7o1OoKWbvDcQ5f",
+                "name": "Condition Branch",
+                "title": "Skip if Hearder Info",
+                "type": "logic.condition_block",
+                "base_type": "activity",
+                "properties": {
+                  "condition": {
+                    "left_operand": "$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].DEVICE_NAME$",
+                    "operator": "eq",
+                    "right_operand": "DEVICE_NAME"
+                  },
+                  "continue_on_failure": false,
+                  "display_name": "Skip if Hearder Info",
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01GMJEWIIY5RG7CFEF2hRVfu2Cy6BQhwFbJ",
+                "name": "Condition Branch",
+                "title": "Condition Branch",
+                "type": "logic.condition_block",
+                "base_type": "activity",
+                "properties": {
+                  "condition": {
+                    "left_operand": "$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].DEVICE_NAME$",
+                    "operator": "ne",
+                    "right_operand": "DEVICE_NAME"
+                  },
+                  "continue_on_failure": false,
+                  "display_name": "Condition Branch",
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity",
+                "actions": [
+                  {
+                    "unique_name": "definition_activity_01GMK065F5X3E5ZeToSsiNy5OByyCxkOFog",
+                    "name": "HTTP Request",
+                    "title": "Onboard Device",
+                    "type": "web-service.http_request",
+                    "base_type": "activity",
+                    "properties": {
+                      "accept": "application/vnd.yang.data+xml",
+                      "action_timeout": 180,
+                      "allow_auto_redirect": true,
+                      "body": "\u003cdevice\u003e                            \n    \u003cname\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].DEVICE_NAME$\u003c/name\u003e\n    \u003caddress\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].DEVICE_IP$\u003c/address\u003e\n    \u003cport\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].DEVICE_PORT$\u003c/port\u003e\n    \u003cauthgroup\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].AUTHORIZAION_GROUP$\u003c/authgroup\u003e\n    \u003cdevice-type\u003e\n      \u003ccli\u003e                                                       \n        \u003cned-id xmlns:cisco-ios-xr-id=\"http://tail-f.com/ned/cisco-ios-xr-id\"\u003ecisco-ios-xr-id:cisco-ios-xr\u003c/ned-id\u003e\n        \u003cprotocol\u003essh\u003c/protocol\u003e\n      \u003c/cli\u003e                                \n    \u003c/device-type\u003e\n    \u003cstate\u003e                                 \n      \u003cadmin-state\u003eunlocked\u003c/admin-state\u003e\n    \u003c/state\u003e               \n  \u003c/device\u003e",
+                      "continue_on_error_status_code": false,
+                      "continue_on_failure": false,
+                      "display_name": "Onboard Device",
+                      "method": "PATCH",
+                      "relative_url": "/api/running/devices/device",
+                      "runtime_user": {
+                        "override_target_runtime_user": false,
+                        "target_default": true
+                      },
+                      "skip_execution": false,
+                      "target": {
+                        "override_workflow_target": true,
+                        "target_id": "definition_target_01GHEQJV865WH5suJGNb8RgVemEXgSFnQ5e"
+                      }
+                    },
+                    "object_type": "definition_activity"
+                  },
+                  {
+                    "unique_name": "definition_activity_01GQSEPS2ZMT52LWrX1gXwaJEf1gFrBGX7s",
+                    "name": "HTTP Request",
+                    "title": "Get Device SSH Keys",
+                    "type": "web-service.http_request",
+                    "base_type": "activity",
+                    "properties": {
+                      "accept": "application/vnd.yang.data+xml",
+                      "action_timeout": 180,
+                      "allow_auto_redirect": true,
+                      "continue_on_error_status_code": false,
+                      "continue_on_failure": false,
+                      "display_name": "Get Device SSH Keys",
+                      "method": "POST",
+                      "relative_url": "/api/running/devices/device/$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].DEVICE_NAME$/ssh/_operations/fetch-host-keys",
+                      "runtime_user": {
+                        "override_target_runtime_user": false,
+                        "target_default": true
+                      },
+                      "skip_execution": false,
+                      "target": {
+                        "override_workflow_target": true,
+                        "target_id": "definition_target_01GHEQJV865WH5suJGNb8RgVemEXgSFnQ5e"
+                      }
+                    },
+                    "object_type": "definition_activity"
+                  },
+                  {
+                    "unique_name": "definition_activity_01GQSGK2GJQ9E29jAQKKKT126PWmIVa9G1P",
+                    "name": "HTTP Request",
+                    "title": "Request Sync from Device",
+                    "type": "web-service.http_request",
+                    "base_type": "activity",
+                    "properties": {
+                      "accept": "application/vnd.yang.data+xml",
+                      "action_timeout": 180,
+                      "allow_auto_redirect": true,
+                      "continue_on_error_status_code": false,
+                      "continue_on_failure": false,
+                      "display_name": "Request Sync from Device",
+                      "method": "POST",
+                      "relative_url": "/api/running/devices/device/$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].DEVICE_NAME$/_operations/sync-from",
+                      "runtime_user": {
+                        "override_target_runtime_user": false,
+                        "target_default": true
+                      },
+                      "skip_execution": false,
+                      "target": {
+                        "override_workflow_target": true,
+                        "target_id": "definition_target_01GHEQJV865WH5suJGNb8RgVemEXgSFnQ5e"
+                      }
+                    },
+                    "object_type": "definition_activity"
+                  },
+                  {
+                    "unique_name": "definition_activity_01GQW0TI87MTH3xboWN1BE6wx4rHXwJLOBC",
+                    "name": "HTTP Request",
+                    "title": "Create NSO Service",
+                    "type": "web-service.http_request",
+                    "base_type": "activity",
+                    "properties": {
+                      "accept": "application/vnd.yang.data+xml",
+                      "action_timeout": 180,
+                      "allow_auto_redirect": true,
+                      "body": "\u003cservices xmlns=\"http://tail-f.com/ns/ncs\"\u003e\n  \u003cTeco_GC xmlns=\"http://com/example/Teco_GC\"\u003e\n    \u003cHOST_NAME\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].DEVICE_NAME$\u003c/HOST_NAME\u003e\n    \u003cdevice\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].DEVICE_NAME$\u003c/device\u003e\n    \u003cHOST_NA_B1\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].HOST_NA_B1$\u003c/HOST_NA_B1\u003e\n    \u003cHOST_NA_B2\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].HOST_NA_B2$\u003c/HOST_NA_B2\u003e\n    \u003cIP_LOOPBACK_NTP_REG_1\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].IP_LOOPBACK_NTP_REG_1$\u003c/IP_LOOPBACK_NTP_REG_1\u003e\n    \u003cIP_LOOPBACK_NTP_REG_2\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].IP_LOOPBACK_NTP_REG_2$\u003c/IP_LOOPBACK_NTP_REG_2\u003e\n    \u003cIP_LOOPBACK0\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].IP_LOOPBACK0$\u003c/IP_LOOPBACK0\u003e\n    \u003cHOST_INT_B1_L1\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].HOST_INT_B1_L1$\u003c/HOST_INT_B1_L1\u003e\n    \u003cHOST_INT_B1_L2\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].HOST_INT_B1_L2$\u003c/HOST_INT_B1_L2\u003e\n    \u003cHOST_INT_B2_L1\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].HOST_INT_B2_L1$\u003c/HOST_INT_B2_L1\u003e\n    \u003cHOST_INT_B2_L2\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].HOST_INT_B2_L2$\u003c/HOST_INT_B2_L2\u003e\n    \u003cB1_L1\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].B1_L1$\u003c/B1_L1\u003e\n    \u003cB1_L2\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].B1_L2$\u003c/B1_L2\u003e\n    \u003cB2_L1\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].B2_L1$\u003c/B2_L1\u003e\n    \u003cB2_L2\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].B2_L2$\u003c/B2_L2\u003e\n    \u003cHOST_NA_B1_INT_L1\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].HOST_NA_B1_INT_L1$\u003c/HOST_NA_B1_INT_L1\u003e\n    \u003cHOST_NA_B1_INT_L2\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].HOST_NA_B1_INT_L2$\u003c/HOST_NA_B1_INT_L2\u003e\n    \u003cHOST_NA_B2_INT_L1\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].HOST_NA_B2_INT_L1$\u003c/HOST_NA_B2_INT_L1\u003e\n    \u003cHOST_NA_B2_INT_L2\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].HOST_NA_B2_INT_L2$\u003c/HOST_NA_B2_INT_L2\u003e\n    \u003cLOCAL_IP_B1\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].LOCAL_IP_B1$\u003c/LOCAL_IP_B1\u003e\n    \u003cLOCAL_IP_B2\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].LOCAL_IP_B2$\u003c/LOCAL_IP_B2\u003e\n    \u003cREMOTE_IP_B1\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].REMOTE_IP_B1$\u003c/REMOTE_IP_B1\u003e\n    \u003cREMOTE_IP_B2\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].REMOTE_IP_B2$\u003c/REMOTE_IP_B2\u003e\n    \u003cAREA_OSPF\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].AREA_OSPF$\u003c/AREA_OSPF\u003e\n    \u003cBGP_NB1\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].BGP_NB1$\u003c/BGP_NB1\u003e\n    \u003cBGP_NB1_Desc\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].BGP_NB2_Desc$\u003c/BGP_NB1_Desc\u003e\n    \u003cBGP_NB2\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].BGP_NB2$\u003c/BGP_NB2\u003e\n    \u003cBGP_NB2_Desc\u003e$activity.definition_activity_01GLY0PNN2L3E0CVQZoyBsuTMiA4OphgbJe.input.source_array[@].BGP_NB2_Desc$\u003c/BGP_NB2_Desc\u003e\n  \u003c/Teco_GC\u003e\n\u003c/services\u003e",
+                      "continue_on_error_status_code": false,
+                      "continue_on_failure": false,
+                      "display_name": "Create NSO Service",
+                      "method": "PATCH",
+                      "relative_url": "/api/running/services/",
+                      "runtime_user": {
+                        "override_target_runtime_user": false,
+                        "target_default": true
+                      },
+                      "skip_execution": false,
+                      "target": {
+                        "override_workflow_target": true,
+                        "target_id": "definition_target_01GHEQJV865WH5suJGNb8RgVemEXgSFnQ5e"
+                      }
+                    },
+                    "object_type": "definition_activity"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "categories": [
+      "category_1BMfMXSnJMyt5Ihqi7rWJr5N8cf"
+    ]
+  },
+  "targets": {
+    "definition_target_01GF2BRDIC6OE2Y3pCClUcPwGHCqSmg3LV7": {
+      "unique_name": "definition_target_01GF2BRDIC6OE2Y3pCClUcPwGHCqSmg3LV7",
+      "name": "ielwr-jumpbox-1.cisco.com",
+      "title": "ielwr-jumpbox-1.cisco.com",
+      "type": "terminal.unix_linux_endpoint",
+      "base_type": "target",
+      "object_type": "definition_target",
+      "properties": {
+        "bash_shell": "/bin/bash",
+        "default_runtime_user_id": "definition_runtime_user_01GF2BJ06UIBB7OdHnwzr0zKe5TFp5HHEbj",
+        "display_name": "ielwr-jumpbox-1.cisco.com",
+        "host": "ielwr-jumpbox-1.cisco.com",
+        "port": 22
+      }
+    },
+    "definition_target_01GHEQJV865WH5suJGNb8RgVemEXgSFnQ5e": {
+      "unique_name": "definition_target_01GHEQJV865WH5suJGNb8RgVemEXgSFnQ5e",
+      "name": "NSO 4.7",
+      "title": "NSO 4.7",
+      "type": "web-service.endpoint",
+      "base_type": "target",
+      "object_type": "definition_target",
+      "properties": {
+        "default_runtime_user_id": "definition_runtime_user_01GHEQIFW0LP31QBxWynsfMRAQJRReBWm6O",
+        "disable_certificate_validation": false,
+        "display_name": "NSO 4.7",
+        "host": "10.90.76.50",
+        "no_runtime_user": false,
+        "port": 8080,
+        "protocol": "http",
+        "proxy_bypass_list": "*"
+      }
+    }
+  },
+  "runtime_users": {
+    "definition_runtime_user_01GF2BJ06UIBB7OdHnwzr0zKe5TFp5HHEbj": {
+      "unique_name": "definition_runtime_user_01GF2BJ06UIBB7OdHnwzr0zKe5TFp5HHEbj",
+      "name": "markpsmi",
+      "title": "markpsmi",
+      "type": "runtime_user.terminal_password_credentials",
+      "base_type": "runtime_user",
+      "object_type": "definition_runtime_user",
+      "properties": {
+        "display_name": "markpsmi",
+        "password": "*****",
+        "user": "*****"
+      }
+    },
+    "definition_runtime_user_01GHEQIFW0LP31QBxWynsfMRAQJRReBWm6O": {
+      "unique_name": "definition_runtime_user_01GHEQIFW0LP31QBxWynsfMRAQJRReBWm6O",
+      "name": "admin",
+      "title": "admin",
+      "type": "runtime_user.web-service_basic_credentials",
+      "base_type": "runtime_user",
+      "object_type": "definition_runtime_user",
+      "properties": {
+        "auth_option": "*****",
+        "basic_password": "*****",
+        "basic_username": "*****",
+        "display_name": "admin"
+      }
+    }
+  }
+}
