@@ -1,0 +1,857 @@
+{
+  "workflow": {
+    "unique_name": "definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP",
+    "name": "NSO SDWAN Demo",
+    "title": "NSO SDWAN Demo",
+    "type": "generic.workflow",
+    "base_type": "workflow",
+    "variables": [
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "{\n  \"sdwan:sdwan-site\": {\n    \"site-name\": \"vcontroller-Site\",\n    \"provider\": \"Openstack-Provider\",\n    \"tenant\": \"SingleTenant\",\n    \"plan\": {\n      \"component\": [\n        {\n          \"type\": \"tailf-ncs:self\",\n          \"name\": \"self\",\n          \"state\": [\n            {\n              \"name\": \"tailf-ncs:init\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T16:58:37.9772+00:00\",\n              \"pre-conditions\": {\n                \"delete-monitor\": \"$PLAN\",\n                \"delete-trigger-expr\": \"not(component[type != 'ncs:self'])\"\n              }\n            },\n            {\n              \"name\": \"tailf-ncs:ready\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:08:48.358522+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$PLAN\",\n                \"create-trigger-expr\": \"not(component[type != 'ncs:self']/state[name = 'ncs:ready'][status != 'reached']) or component[type != 'ncs:self']/state/status = 'failed' or component[type != 'ncs:self']/state/post-action-status = 'failed'\"\n              }\n            }\n          ],\n          \"back-track\": false\n        },\n        {\n          \"type\": \"sdwan:esc\",\n          \"name\": \"esc1\",\n          \"state\": [\n            {\n              \"name\": \"tailf-ncs:init\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T16:58:37.9772+00:00\",\n              \"pre-conditions\": {\n                \"delete-monitor\": \"$PLAN\",\n                \"delete-trigger-expr\": \"not(component[type = 'sdwan:esc-wanEdge']) and not(component[type = 'sdwan:vManage']) and not(component[type = 'sdwan:vManage-cluster']) and not(component[type = 'sdwan:vBond']) and not(component[type = 'sdwan:vSmart'])\"\n              },\n              \"message\": \"-\",\n              \"error-code\": \"-\"\n            },\n            {\n              \"name\": \"tailf-ncs:ready\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T16:58:37.9772+00:00\",\n              \"message\": \"-\",\n              \"error-code\": \"-\"\n            }\n          ],\n          \"back-track\": false\n        },\n        {\n          \"type\": \"sdwan:vBond\",\n          \"name\": \"esc-vbond\",\n          \"state\": [\n            {\n              \"name\": \"tailf-ncs:init\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T16:58:37.9772+00:00\",\n              \"message\": \"-\"\n            },\n            {\n              \"name\": \"sdwan:onboard\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:00:12.867856+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"/virtual-device-infrastructure:virtual-device-infra-status/virtual-device-infrastructure:virtual-device-infra[name=$SITE_NAME][provider=$PROVIDER][tenant=$TENANT]/plan\",\n                \"create-trigger-expr\": \"component[type='virtual-device-infrastructure:vnf'][name=$VNF]/state[name='ncs:ready']/status != 'not-reached'\",\n                \"delete-monitor\": \"/virtual-device-infrastructure:virtual-device-infra-status\",\n                \"delete-trigger-expr\": \"not(virtual-device-infrastructure:virtual-device-infra[name=$SITE_NAME][provider=$PROVIDER][tenant=$TENANT]/plan/component[type='virtual-device-infrastructure:vnf'][name=$VNF])\"\n              },\n              \"message\": \"-\"\n            },\n            {\n              \"name\": \"sdwan:template\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:00:12.867856+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/opdata/vnf-deployment-unit\",\n                \"create-trigger-expr\": \"apply-template-mode = 'NOOP' or apply-template-mode = 'SUCCESS'\"\n              },\n              \"message\": \"Not Applicable\"\n            },\n            {\n              \"name\": \"sdwan:add-controller\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:06:37.478807+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/controller-add\",\n                \"create-trigger-expr\": \"state = 'DONE' or state = 'FAILED'\"\n              }\n            },\n            {\n              \"name\": \"sdwan:generate-csr\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:07:52.227666+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/generate-csr\",\n                \"create-trigger-expr\": \"state = 'DONE' or state = 'FAILED'\"\n              }\n            },\n            {\n              \"name\": \"sdwan:certificate-install\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:08:07.476282+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/install-cert\",\n                \"create-trigger-expr\": \"state = 'DONE'or state = 'FAILED' \"\n              }\n            },\n            {\n              \"name\": \"tailf-ncs:ready\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:08:07.476282+00:00\"\n            }\n          ],\n          \"back-track\": false\n        },\n        {\n          \"type\": \"sdwan:vManage\",\n          \"name\": \"esc-vmanage\",\n          \"state\": [\n            {\n              \"name\": \"tailf-ncs:init\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T16:58:37.9772+00:00\",\n              \"message\": \"-\"\n            },\n            {\n              \"name\": \"sdwan:onboard\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:06:01.054937+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"/virtual-device-infrastructure:virtual-device-infra-status/virtual-device-infrastructure:virtual-device-infra[name=$SITE_NAME][provider=$PROVIDER][tenant=$TENANT]/plan\",\n                \"create-trigger-expr\": \"component[type='virtual-device-infrastructure:vnf'][name=$VNF]/state[name='ncs:ready']/status != 'not-reached'\",\n                \"delete-monitor\": \"/virtual-device-infrastructure:virtual-device-infra-status\",\n                \"delete-trigger-expr\": \"not(virtual-device-infrastructure:virtual-device-infra[name=$SITE_NAME][provider=$PROVIDER][tenant=$TENANT]/plan/component[type='virtual-device-infrastructure:vnf'][name=$VNF])\"\n              },\n              \"message\": \"-\"\n            },\n            {\n              \"name\": \"sdwan:template\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:06:01.054937+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/opdata/vnf-deployment-unit\",\n                \"create-trigger-expr\": \"apply-template-mode = 'NOOP' or apply-template-mode = 'SUCCESS'\"\n              },\n              \"message\": \"Not Applicable\"\n            },\n            {\n              \"name\": \"sdwan:device-sync\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:06:06.252941+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/device-synced\",\n                \"create-trigger-expr\": \"state = 'DONE' or state = 'FAILED'\"\n              }\n            },\n            {\n              \"name\": \"sdwan:generate-csr\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:07:52.227666+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/generate-csr\",\n                \"create-trigger-expr\": \"state = 'DONE' or state = 'FAILED'\"\n              }\n            },\n            {\n              \"name\": \"sdwan:certificate-install\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:08:29.380763+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/install-cert\",\n                \"create-trigger-expr\": \"state = 'DONE'or state = 'FAILED' \"\n              }\n            },\n            {\n              \"name\": \"tailf-ncs:ready\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:08:29.380763+00:00\"\n            }\n          ],\n          \"back-track\": false\n        },\n        {\n          \"type\": \"sdwan:vSmart\",\n          \"name\": \"esc-vsmart\",\n          \"state\": [\n            {\n              \"name\": \"tailf-ncs:init\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T16:58:37.9772+00:00\",\n              \"message\": \"-\"\n            },\n            {\n              \"name\": \"sdwan:onboard\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T16:59:51.113932+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"/virtual-device-infrastructure:virtual-device-infra-status/virtual-device-infrastructure:virtual-device-infra[name=$SITE_NAME][provider=$PROVIDER][tenant=$TENANT]/plan\",\n                \"create-trigger-expr\": \"component[type='virtual-device-infrastructure:vnf'][name=$VNF]/state[name='ncs:ready']/status != 'not-reached'\",\n                \"delete-monitor\": \"/virtual-device-infrastructure:virtual-device-infra-status\",\n                \"delete-trigger-expr\": \"not(virtual-device-infrastructure:virtual-device-infra[name=$SITE_NAME][provider=$PROVIDER][tenant=$TENANT]/plan/component[type='virtual-device-infrastructure:vnf'][name=$VNF])\"\n              },\n              \"message\": \"-\"\n            },\n            {\n              \"name\": \"sdwan:template\",\n              \"status\": \"not-reached\",\n              \"when\": \"2020-07-31T16:59:51.113932+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/opdata/vnf-deployment-unit\",\n                \"create-trigger-expr\": \"apply-template-mode = 'NOOP' or apply-template-mode = 'SUCCESS'\"\n              },\n              \"message\": \"Not Applicable\"\n            },\n            {\n              \"name\": \"sdwan:add-controller\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:07:20.437844+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/controller-add\",\n                \"create-trigger-expr\": \"state = 'DONE'\"\n              }\n            },\n            {\n              \"name\": \"sdwan:generate-csr\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:07:52.227666+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/generate-csr\",\n                \"create-trigger-expr\": \"state = 'DONE' or state = 'FAILED'\"\n              }\n            },\n            {\n              \"name\": \"sdwan:certificate-install\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:08:48.358522+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/install-cert\",\n                \"create-trigger-expr\": \"state = 'DONE'or state = 'FAILED' \"\n              }\n            },\n            {\n              \"name\": \"tailf-ncs:ready\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:08:48.358522+00:00\"\n            }\n          ],\n          \"back-track\": false\n        }\n      ]\n    },\n    \"infrastructure\": \"esc\"\n  }\n}",
+          "scope": "local",
+          "name": "JSON",
+          "type": "datatype.string",
+          "is_required": false
+        },
+        "unique_name": "variable_workflow_01HO4LEGZTMDZ2BfMD0tHatEoapt5HHXCNK",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.integer",
+        "properties": {
+          "value": 1,
+          "scope": "output",
+          "name": "Ready",
+          "type": "datatype.integer",
+          "is_required": false
+        },
+        "unique_name": "variable_workflow_01HO59PZV76EJ5ZiShrDh6RFXgA2Yhmcewo",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.integer",
+        "properties": {
+          "value": 0,
+          "scope": "output",
+          "name": "TimeOutCounter",
+          "type": "datatype.integer",
+          "is_required": false
+        },
+        "unique_name": "variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge",
+        "object_type": "variable_workflow"
+      }
+    ],
+    "properties": {
+      "atomic": {
+        "is_atomic": false
+      },
+      "delete_workflow_instance": false,
+      "display_name": "NSO SDWAN Demo",
+      "runtime_user": {
+        "override_target_runtime_user": false,
+        "specify_on_workflow_start": false,
+        "target_default": true
+      },
+      "target": {
+        "execute_on_target_group": false,
+        "execute_on_workflow_target": false,
+        "no_target": true,
+        "specify_on_workflow_start": false
+      }
+    },
+    "object_type": "definition_workflow",
+    "actions": [
+      {
+        "unique_name": "definition_activity_01HOU6HKYYXTK3hAwxiErgkvnINwmx4CBAU",
+        "name": "HTTP Request",
+        "title": "Add Provider Openstack",
+        "type": "web-service.http_request",
+        "base_type": "activity",
+        "properties": {
+          "accept": "application/yang-data+json",
+          "action_timeout": 180,
+          "allow_auto_redirect": true,
+          "body": "{\n  \"core-fp-common:provider-infrastructure\": [\n    {\n      \"provider\": \"Openstack-Provider\",\n      \"branch-infra-common:catalog\": \"Gold\",\n      \"sdwan:catalog\": \"Gold\",\n      \"sdwan:alias\": \"LWR-SDWAN01\",\n      \"sdwan:vbond-ipaddress\": \"10.90.76.100\",\n      \"sdwan:vbond-port\": \"12346\",\n      \"sdwan:certificate-details\": {\n        \"ca-server-scep-url\": \"http://172.23.80.83/scep/scep-server-1\",\n        \"sscep-path\": \"/usr/bin/sscep\",\n        \"pass-phrase\": \"SecretChallenge\",\n        \"signature-key\": \"-----BEGIN ENCRYPTED PRIVATE KEY-----\nMIIFHDBOBgkqhkiG9w0BBQ0wQTApBgkqhkiG9w0BBQwwHAQIBgghqlrcIeICAggA\nMAwGCCqGSIb3DQIJBQAwFAYIKoZIhvcNAwcECJI4fq2+4GRjBIIEyDO6lhW6uSnA\n5ZXE56SbzKPBtOvmAtz8qRP5nad1Dd/T3b/XC2+4WY1QxjFtZa3ViU3L8tlqiDs4\n0WOyQM1MNwIcY4eFJcw/7/TcBoGRd1J5HkMaGxzApR1+VJiN5GCXat5HWWhH/AnK\niUO7m4tedkjANXSU9o3xvx4y/PZRNu0cZ6Z4+vLpAtin3Sf8oDQCgoiy9bz0gW1B\nDjBqn/YlbH2KTOJ3+nHsUAUxDMGrYDlSHr5SYd8IaV8D512nJA7wYO5M4CqJWh7F\nMW7Fg/nK4DrpLwKr5UHcm6BwgMm/p5lbRFTA4otgQEAcrjR0rm1Zi71LNds83Rbu\n1FgdtDAbVjyEs2rVI76R07tGTrLwNuYmaY8XribfG8JolhAywt4uI6leWcXmVz+O\nM4AyznS/JzhjB7AbmA48jfliwdARnaAg/fMR3pokLvBVUDug00VCNoSLwTETZVQY\nvuTpSVH5ASlm0PVcGSDebpkNNi8mBkvbMVmN5xgaTsp673XPOJvRc07mGtZVPWnG\nWtd+Xt0I9XTTmW0U6xikd56fiio1BAUlm0kp4rYMGhxWQeXEpXtsW/KbBtLrA8Xq\nC6rDAaO+miMbY1U+MylemRSecFwSEo4GPDqaAsWAx3YsSHp1evdRdKEN8fdS00wb\n0Yv32t77ep3elAiHd8GECGgMo7BQniAvSTntgq1C7duKDnlBekxQ92UgEpeTBvI7\n7zzU2mY6MoFOrg/IJpWCutelCHbTDJ1Y0nw3WhKlPWdyLIcJbf3uKe4P5la7/wPG\n6fvz1tub7Yb9gG8y/W7Uh+v8yZWUNVGTsYxqr6rtsFGrplr7KGbrqf/4M8V+cZ/w\n5svjXR5h3PF8avWDCHRaDpHqfl8GYunS69UgxNW/5FL/XeZ1zYRfOHRMvLh6mxym\n9EXpCp3dlicSCMNhao2p05J70zabUevk5ThJhYF7I6EaP1WDtzMupCzIvXG0kc5u\n93XVbDwjRH6ivwsQ2c4xrpcapTFHS5Zp5XxkSLimXbwpn6NFX/f1tlUdL1gzVu5U\niSidsnIDyvrUSn0ulISq5593SI0/edgjAN4RhbsAZ3tuEayR36ElUepNW36mvOgL\nehVUd28VGrVUddOm0xeG8fVkjOwx3Ly70ROC5g68EoHfEtBBKydj4aNjqT6b6nyb\noHw4eTqagcrxs01G/jJDOcLVke8CUgKEXjSIHNATwobvZLWKe9WmdPSXBRBH+TB4\nr6NkR7YKJ47yjpdqKiTrYfiPt2npIAH0dJ26s2rF0J89ZAfmyN9KBao3CVRYmFcC\nkXkXUUnJ3AByVdB/xoZkcdYWHuqGkhIybVvGupGKzxUvlpfH7smYoyu4dpY7J67/\nFkp2t0OSEnzX5SVEJH5t480jGd6GPwaBg7T6mYIb0B8i9g9S/9qtOotQ/168yxVZ\ncd1jyAoRPUnkame5xHUxbsOgf7DDTyHF5BtRT2nmg9U8vkAfhABEHS1EuuBxs+Un\nRW7KGsJlSJ1puLO3h1BLunu4I8L2De22IeO0h8Y47xiXVUTkK/txz98uVMYRV/hq\nkOtXqXEacx45RS+0ZXvHiVRrwJ40Rt64jdGfl9gyuWVOrjkGzeyyL0amLvs7pj+5\nwzCxzuvrm84PrWFHkBQJLA==\n-----END ENCRYPTED PRIVATE KEY-----\",\n       \"signature-cert\": \"-----BEGIN CERTIFICATE-----\nMIIHBTCCBe2gAwIBAgILAXD/HGCUo2+WM6MwDQYJKoZIhvcNAQELBQAwgYwxCzAJ\nBgNVBAYTAlVTMQswCQYDVQQIDAJDQTERMA8GA1UEBwwIU2FuIEpvc2UxFDASBgNV\nBAoMC1NpZ25lci1DZXJ0MRgwFgYDVQQLDA9OU08tU2lnbmVyLUNlcnQxDzANBgNV\nBAMMBlNpZ25lcjEcMBoGCSqGSIb3DQEJARYNbnNvQGNpc2NvLmNvbTAeFw0yMDA0\nMzAyMzQxMTlaFw0yMDEwMzAyMzQxMTlaMHAxCzAJBgNVBAYTAlVTMQswCQYDVQQI\nDAJHQTEMMAoGA1UEBwwDQVRMMQswCQYDVQQKDAJDTjELMAkGA1UECwwCQ04xDTAL\nBgNVBAMMBHZpbm0xHTAbBgkqhkiG9w0BCQEWDnZpbm1AY2lzY28uY29tMIIBIjAN\nBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAysIbWVahsraL4jzy0SewZ8AAYSsb\nISXQF3nvaYt23LGMOhWm2vM+y9fuvdwFKKEaUHKvMdBXEfnDO5y4LvsbaiTkF0tt\nn+9TGA3uhdHhis9VUAc4rYMYBURe/MUuRoZJa/ew2uLKZMbjbtkxlN4N5BikmkRP\nk2qJPwg16lsrJ/XSmghQyinAHLEUn0xfeXqg3yyaKoUoBYJ+fHEvIrGZcHC0a2Cw\nC7wffDxjgfaTFP342xFl89lMRvkO43GZRRd019x2k8Wb4sM6aAgG95REu1wwxPR7\n31G0ldHAfZHJbjtMz8gDT0oxn4qPCkzB6rP9nOO4+hadecXcHdjlRi6Z/wIDAQAB\no4IDgTCCA30wXgYIKwYBBQUHAQEEUjBQMCcGCCsGAQUFBzAChhtodHRwOi8vbG9j\nYWxob3N0L2NhY2VydC5jcnQwJQYIKwYBBQUHMAGGGWh0dHA6Ly9vY3NwLm9wZW54\ncGtpLm9yZy8wgbIGA1UdIwSBqjCBp4AUiTUGN/rL6ji+DOr9S62KvlejSpShgYuk\ngYgwgYUxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTERMA8GA1UEBwwIU2FuIEpv\nc2UxEjAQBgNVBAoMCVJvb3QtQ2VydDEVMBMGA1UECwwMQ0EtUm9vdF9jZXJ0MQ0w\nCwYDVQQDDARyb290MRwwGgYJKoZIhvcNAQkBFg1uc29AY2lzY28uY29tggEBMAwG\nA1UdEwEB/wQCMAAwgaYGA1UdHwSBnjCBmzAloCOgIYYfaHR0cDovL2xvY2FsaG9z\ndC9jcmwvU2lnbmVyLnBlbTByoHCgboZsbGRhcDovL2xvY2FsaG9zdC9lbWFpbEFk\nZHJlc3M9bnNvQGNpc2NvLmNvbSxDTj1TaWduZXIsT1U9TlNPLVNpZ25lci1DZXJ0\nLE89U2lnbmVyLUNlcnQsTD1TYW4gSm9zZSxTVD1DQSxDPVVTMBYGA1UdJQEB/wQM\nMAoGCCsGAQUFBwMBMAkGA1UdEgQCMAAwDgYDVR0PAQH/BAQDAgWgMCkGCWCGSAGG\n+EIBBAQcFhpodHRwOi8vbG9jYWxob3N0L2NhY3JsLmNydDApBglghkgBhvhCAQME\nHBYaaHR0cDovL2xvY2FsaG9zdC9jYWNybC5jcnQwWwYJYIZIAYb4QgENBE4WTFRo\naXMgaXMgYSBnZW5lcmljIGNlcnRpZmljYXRlLiBHZW5lcmF0ZWQgd2l0aCBPcGVu\nWFBLSSB0cnVzdGNlbnRlciBzb2Z0d2FyZS4wgakGA1UdIASBoTCBnjAFBgMqAwUw\ngZQGAyoDBDCBjDAoBggrBgEFBQcCARYcaHR0cDovL29wZW54cGtpLm9yZy9jcHMu\naHRtbDAoBggrBgEFBQcCARYcaHR0cDovL29wZW54cGtpLm5ldC9jcHMuaHRtbDA2\nBggrBgEFBQcCAjAqGihUaGlzIGlzIGEgY29tbWVudCBmb3IgcG9saWN5IG9pZCAx\nLjIuMy40MB0GA1UdDgQWBBTBjBigzHiMImyx4DWfxPGOwSiFaDANBgkqhkiG9w0B\nAQsFAAOCAQEAW1r7OLiUf/+DWuLIHlIe8d+biybPGlOtghXqWbPd8O3IFrD1T2RC\nerUhLZ7NetRN35JiSyrGn0Jjm5hvfCpLT/y+nSChyuKTv73wySITPkYipaPBbbAr\na8FEzg1HpNXq3AbhjXyJ8RmO2g7+i8TGagHAcRrODVdw+DgQ8J/anQmIehjr0LRh\n9RW+dyIC7mXvahhfpSj/MEHq9GRq75Yg8nmU/g5jnLhEwl/MJ2EWo1vTXx2SdK1g\njR3/eSsNEl4sG/IS7rWl7mlxoZuECnoxDUHFwS6ia9LGQmAMYjYV0grLoAsFRmEO\nP0toKONIgYP7u56/mZHxF/DdLZs7wcPHgg==\n-----END CERTIFICATE-----\",\n        \"root-cert\": \"-----BEGIN CERTIFICATE-----\nMIIDgTCCAmkCAQIwDQYJKoZIhvcNAQELBQAwgYUxCzAJBgNVBAYTAlVTMQswCQYD\nVQQIDAJDQTERMA8GA1UEBwwIU2FuIEpvc2UxEjAQBgNVBAoMCVJvb3QtQ2VydDEV\nMBMGA1UECwwMQ0EtUm9vdF9jZXJ0MQ0wCwYDVQQDDARyb290MRwwGgYJKoZIhvcN\nAQkBFg1uc29AY2lzY28uY29tMB4XDTIwMDIxNDAwMTUwOFoXDTIyMDIxMzAwMTUw\nOFowgYYxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTERMA8GA1UEBwwIU2FuIEpv\nc2UxEjAQBgNVBAoMCVNDRVAtY2VydDEWMBQGA1UECwwNU0NFUC1uc28tY2VydDEN\nMAsGA1UEAwwEU0NFUDEcMBoGCSqGSIb3DQEJARYNbnNvQGNpc2NvLmNvbTCCASIw\nDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALAdDvwjaLzwPAuWxfWyz52wJRix\n7keTeeckFE8P1CUIu+7qh8QUn/cFbx5pHc4Ss/MYIlra84+0Lh239gJ/XDiKL+kJ\n7PcZsuYrmHJXQ2+HvM8ZmOnVwxuJG+K75Qfi9wkrMUpJh5iiCsVXdHZ3Z8ybsQxt\nwmI5lqcmaV66ajogGPcLarH8IdQmPy1Er3GlN2aTUyz4+N2TsLFXiIfpbSe5NLcF\nD7tFW4giFIsCPi33yem44bylTQXY68toOskxMm7IjqVgXGxKUgP8iXqzVKTac05j\n1oYJ5O/3T3m/MuF4Q0MD1PeCB6TkWaedz3F/mQyRXnKb2aPvDBWKyFOT4RUCAwEA\nATANBgkqhkiG9w0BAQsFAAOCAQEAtOLBKAi1KU8MKLFB2CYzzSCPDZlN6Zs4Pmdc\nL8Dzz9d4rkeS4Nhv6cNFXhkKFBUK2Kom5auJ81DH1pS1+5SXN8odqc3s8p0SnqQY\nDiAj0DPNjxcCePxRbi0O3E3z+VfprcW+mEQQdwIrcKFGJTn40Qi4J8qn/EqIj6b6\nPKqiGgUyoHppN8JxvVlcHjdh05LntrLxSxrssOtT4frrSLwEjj1+2nyWjvAtOyDN\nr7eoqylZR7tavE7dezaGaq8p5ZjHVSAJCq6lHTsU19ApXmlDg3vT2ELvBX613Akc\nCeTKGAt2A6WbJfbpUqlB6kAcYbHAioH2z7kMg5Jr+e4eLsih5g==\n-----END CERTIFICATE-----\"\n      },\n      \"sdwan:ca-cert\": \"-----BEGIN CERTIFICATE-----\nMIID3jCCAsagAwIBAgIBATANBgkqhkiG9w0BAQsFADCBhTELMAkGA1UEBhMCVVMx\nCzAJBgNVBAgMAkNBMREwDwYDVQQHDAhTYW4gSm9zZTESMBAGA1UECgwJUm9vdC1D\nZXJ0MRUwEwYDVQQLDAxDQS1Sb290X2NlcnQxDTALBgNVBAMMBHJvb3QxHDAaBgkq\nhkiG9w0BCQEWDW5zb0BjaXNjby5jb20wHhcNMjAwMjE0MDAxMzE1WhcNMjIwMjEz\nMDAxMzE1WjCBjDELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAkNBMREwDwYDVQQHDAhT\nYW4gSm9zZTEUMBIGA1UECgwLU2lnbmVyLUNlcnQxGDAWBgNVBAsMD05TTy1TaWdu\nZXItQ2VydDEPMA0GA1UEAwwGU2lnbmVyMRwwGgYJKoZIhvcNAQkBFg1uc29AY2lz\nY28uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvvqO4Z4izZcf\nVwa1uY6CydJ+YTzKYmXTwsRYSW9uLHXvEVPP4p4W//Hy1Y4UE/PUBJuf+sYn2eIf\n5kfSpf5PzFskxx3hBck1Z8j1RxYHpayZqkz9AoJy3vPnRGDFSpwdhHCS1ZsiwQyT\nCulwkKp9aWBcdFVsJv4iAVfBgQNsHpoCPxJw2fZcCqsgf3j/oIwEkcky54DVdmDm\ney/EPVv4dRS31Or/tJxqc9ffw1EJOtx/SwZDu77Djjz6Mz9fId8/oRF2ka1jTd+H\nLtE8kT5UnrEryKf/cBJGrWTQf+jKgtI5gcZljC2LmqrKu9VNROKHVKazJ0mP6VRJ\njLgY1+QP6QIDAQABo1AwTjAdBgNVHQ4EFgQUiTUGN/rL6ji+DOr9S62KvlejSpQw\nHwYDVR0jBBgwFoAUk7F+3iTqjRL+l3DUJZK2YWAJDNUwDAYDVR0TBAUwAwEB/zAN\nBgkqhkiG9w0BAQsFAAOCAQEAVoyBy5eV2GKBOUwEbWk/8nu0K/Zc8QVU0f+hop8e\nuB1c9O1kHsLvt0qa4IQNU9cbbQXh44k1Hom7ABsvGWbAz6nrmeWFidF5jZ6/SvRy\nNHIv31+O2pfIf6Iv1uz2moCgNHyeAHRGxdt32ejwztN7m13xKnvvYmQCSmnez3W+\nki0lQhjJfFSka53FxyAzFUIMrdotvAMLP0Jd5lc1QF7F8zkQfzSveGTY6945GYtv\nDilam31d8ecmKkmKXZhqQDJTvLMOv0gh67rmowx4HdYqtJ8a7HVjb+MSsPhrcJ9c\nbrjGbcHsw9BxO2SVbLWedcDk0DaKMNK+rz8iOnKAoBRZFQ==\n-----END CERTIFICATE-----\n-----BEGIN CERTIFICATE-----\nMIID3zCCAsegAwIBAgIJANwDU8wGujhmMA0GCSqGSIb3DQEBCwUAMIGFMQswCQYD\nVQQGEwJVUzELMAkGA1UECAwCQ0ExETAPBgNVBAcMCFNhbiBKb3NlMRIwEAYDVQQK\nDAlSb290LUNlcnQxFTATBgNVBAsMDENBLVJvb3RfY2VydDENMAsGA1UEAwwEcm9v\ndDEcMBoGCSqGSIb3DQEJARYNbnNvQGNpc2NvLmNvbTAeFw0yMDAyMTQwMDA5MzBa\nFw0yMjAyMTMwMDA5MzBaMIGFMQswCQYDVQQGEwJVUzELMAkGA1UECAwCQ0ExETAP\nBgNVBAcMCFNhbiBKb3NlMRIwEAYDVQQKDAlSb290LUNlcnQxFTATBgNVBAsMDENB\nLVJvb3RfY2VydDENMAsGA1UEAwwEcm9vdDEcMBoGCSqGSIb3DQEJARYNbnNvQGNp\nc2NvLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMViy6kTbr1l\nT7DdHFUJzYc7I0SsMeGo2kIz9zBiVHph7+9w1vgzqgpbFdc2PXK+nrL3jnm3qbyC\npJJ+DWNHJzkGqATAxdaihEIFR8Abs+zUJvp8nNao5iRxSdvP/MpEFDwFL/kBN1OW\naCWRn+z8lf4wv5GxIblhqr+j6dxj9OiGu0+hOTryJEjJJJvsdDJVw2d+ORG+dMYr\n179LYZLVKV4tehkNxxXEjx/rDxnNnNj7MmuFbjojByDmpF78rdDPrCt3kkBl4GAS\nW3P/Z2qvvHtm18Wxy+SPG4y9Ax3BnIBYjbYL5Plaxsto8kJJZSXGJSiSMepD7R7g\nkrRfSOZRodECAwEAAaNQME4wHQYDVR0OBBYEFJOxft4k6o0S/pdw1CWStmFgCQzV\nMB8GA1UdIwQYMBaAFJOxft4k6o0S/pdw1CWStmFgCQzVMAwGA1UdEwQFMAMBAf8w\nDQYJKoZIhvcNAQELBQADggEBAEcC9qhDWMLqW7mc2p0G5dvY/9CHIm9zxhLCS68E\netaAf7c+yQ78HpqxwqGODMtG0mk+0Teda4IfbjLF9Mf308ewIu0s74THjjGCbJ4g\n5SUMQjQoe+CxJXtWmUTDEPEIRbuexRAw7Gd299qaN3/nAkdodh5v6g1cP9/Ycdmj\nS/rTxcq73e5RxHLjAQVF8F5aFR06DNIbiKHrXIADzDtzRdcIEP1iUYauoYsEIs8b\nfvnwbwsSxcrJUWZoz/4ls7nf3uwlb41Nb6ui9VZY7EJ15EXNdsZk3x3vg6XOCgqt\nngkJRzMfUJIOuyXUXHe5VyMctidO9+Sg5fl8D/x3wcK9Y50=\n-----END CERTIFICATE-----\"\n    }\n  ]\n}",
+          "continue_on_error_status_code": false,
+          "continue_on_failure": false,
+          "custom_headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/yang-data+json"
+            }
+          ],
+          "display_name": "Add Provider Openstack",
+          "method": "PATCH",
+          "relative_url": "/restconf/data",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "override_workflow_target": true,
+            "target_id": "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU"
+          }
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01HOU96UW6SO91DpzvpFAElhcbBQZ5EdFw4",
+        "name": "HTTP Request",
+        "title": "Add  sdwan-site vcontroller",
+        "type": "web-service.http_request",
+        "base_type": "activity",
+        "properties": {
+          "accept": "application/yang-data+json",
+          "action_timeout": 180,
+          "allow_auto_redirect": true,
+          "body": "{\n  \"sdwan:sdwan-site\": [\n    {\n      \"site-name\": \"vcontroller-Site\",\n      \"provider\": \"Openstack-Provider\",\n      \"tenant\": \"SingleTenant\",\n      \"esc\": {\n        \"vnfm\": \"esc1\",\n        \"cisco-nfvo:vnfm-type\": \"netconf\",\n        \"vim-type\": \"openstack\",\n        \"nsd\": \"vControllers\",\n        \"deployment-flavor\": \"basic\",\n        \"vim-profile\": \"Openstack\",\n        \"vim-tenant\": \"admin\",\n        \"vnf-info\": [\n          {\n          \"vnf\": \"esc-vbond\",\n          \"type\": \"vController\",\n          \"vnfm\": \"esc1\",\n          \"vnf-tenant\": \"admin\",\n          \"create-image\": \"false\",\n          \"create-flavor\": \"false\",\n          \"vnf-profile\": \"vBond-ESC\",\n          \"vdu-profile\": \"vBond-ESC\",\n          \"username\": \"admin\",\n          \"password\": \"Cisco321\",\n          \"host-name\": \"vbond-test\",\n          \"internal-connection-point\": {\n            \"id\": \"mgmt\",\n            \"netconf-parameters\": {\n              \"address\": \"10.90.76.100\"\n            }\n          },\n          \"ip\": \"10.90.76.100\",\n          \"mask\": \"255.255.255.0\",\n          \"gtw\": \"10.90.76.1\",\n          \"day-0\": {\n            \"cfg-file\": \"vbond_day0_template.cfg\"\n          },\n          \"vController\": {\n            \"personality\": \"vBond\",\n            \"site-id\": \"723\",\n            \"system-ip\": \"6.6.6.8\"\n          }\n        },\n        {\n          \"vnf\": \"esc-vmanage\",\n          \"type\": \"vController\",\n          \"vnfm\": \"esc1\",\n          \"vnf-tenant\": \"admin\",\n          \"create-image\": \"false\",\n          \"create-flavor\": \"false\",\n          \"vnf-profile\": \"vManage-ESC\",\n          \"vdu-profile\": \"vManage-ESC\",\n          \"username\": \"admin\",\n          \"password\": \"Cisco321\",\n          \"host-name\": \"vmanage-test\",\n          \"internal-connection-point\": {\n            \"id\": \"mgmt\",\n            \"netconf-parameters\": {\n              \"address\": \"10.90.76.99\"\n            }\n          },\n          \"ip\": \"10.90.76.99\",\n          \"mask\": \"255.255.255.0\",\n          \"gtw\": \"10.90.76.1\",\n          \"day-0\": {\n            \"cfg-file\": \"vmanage_day0_template.cfg\"\n          },\n          \"vController\": {\n            \"personality\": \"vManage\",\n            \"site-id\": \"723\",\n            \"system-ip\": \"6.6.6.7\"\n          }\n        },\n        {\n          \"vnf\": \"esc-vsmart\",\n          \"type\": \"vController\",\n          \"vnfm\": \"esc1\",\n          \"vnf-tenant\": \"admin\",\n          \"create-image\": \"false\",\n          \"create-flavor\": \"false\",\n          \"vnf-profile\": \"vSmart-ESC\",\n          \"vdu-profile\": \"vSmart-ESC\",\n          \"username\": \"admin\",\n          \"password\": \"Cisco321\",\n          \"host-name\": \"vsmart-test\",\n          \"internal-connection-point\": {\n            \"id\": \"mgmt\",\n            \"netconf-parameters\": {\n              \"address\": \"10.90.76.101\"\n            }\n          },\n          \"ip\": \"10.90.76.101\",\n          \"mask\": \"255.255.255.0\",\n          \"gtw\": \"10.90.76.1\",\n          \"day-0\": {\n            \"cfg-file\": \"vsmart_day0_template.cfg\"\n          },\n          \"vController\": {\n            \"personality\": \"vSmart\",\n            \"site-id\": \"723\",\n            \"system-ip\": \"6.6.6.9\"\n          }\n        }\n        ],\n        \"sap-info\": [\n          {\n          \"id\": \"mgmt1\",\n          \"network-name\": \"flat-provider-network\"\n          },\n          {\n          \"id\": \"mgmt2\",\n          \"network-name\": \"flat-provider-network\"\n          },\n          {\n          \"id\": \"mgmt3\",\n          \"network-name\": \"flat-provider-network\"\n          },\n          {\n          \"id\": \"service1\",\n          \"network-name\": \"private\"\n          },\n          {\n          \"id\": \"service2\",\n          \"network-name\": \"private\"\n          },\n          {\n          \"id\": \"service3\",\n          \"network-name\": \"private\"\n          }\n        ]\n      }\n    }\n  ]\n}",
+          "continue_on_error_status_code": false,
+          "continue_on_failure": false,
+          "custom_headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/yang-data+json"
+            }
+          ],
+          "display_name": "Add  sdwan-site vcontroller",
+          "method": "PATCH",
+          "relative_url": "/restconf/data",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "override_workflow_target": true,
+            "target_id": "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU"
+          }
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01HO5PTIDMMJ03ExqX3XoQ9P55I59OOkJcq",
+        "name": "While Loop",
+        "title": "Check SDWAM Status vcontroller (While)",
+        "type": "logic.while",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Check SDWAM Status vcontroller (While)",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01HO5PTT26NNC0saOO4agZ9N64KDkehsodh",
+            "name": "Condition Branch",
+            "title": "Condition Branch",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": {
+                  "left_operand": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO59PZV76EJ5ZiShrDh6RFXgA2Yhmcewo$",
+                  "operator": "eq",
+                  "right_operand": 1
+                },
+                "operator": "or",
+                "right_operand": {
+                  "left_operand": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge$",
+                  "operator": "gt",
+                  "right_operand": 20
+                }
+              },
+              "continue_on_failure": false,
+              "display_name": "Condition Branch",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01HO62C1PBBNI7TgPSMFAknVRRA2tAbC7nd",
+                "name": "Sleep",
+                "title": "Sleep for 30 Seconds",
+                "type": "core.sleep",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Sleep for 30 Seconds",
+                  "skip_execution": false,
+                  "sleep_interval": 30
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HO7M13BQQ252L46qCyn7kH7R4PLZzJEAz",
+                "name": "HTTP Request",
+                "title": "Get SDWAN Status vcontroller",
+                "type": "web-service.http_request",
+                "base_type": "activity",
+                "properties": {
+                  "accept": "application/yang-data+json",
+                  "action_timeout": 180,
+                  "allow_auto_redirect": true,
+                  "continue_on_error_status_code": false,
+                  "continue_on_failure": false,
+                  "display_name": "Get SDWAN Status vcontroller",
+                  "method": "GET",
+                  "relative_url": "/restconf/data/sdwan-status/sdwan-site=vcontroller-Site,Openstack-Provider,SingleTenant",
+                  "runtime_user": {
+                    "override_target_runtime_user": false,
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU"
+                  }
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HO4LP668L6A7eGdkEKYteE2y4cV9poDcd",
+                "name": "JSONPath Query",
+                "title": "Get Status for all componets",
+                "type": "corejava.jsonpathquery",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "continue_on_failure": false,
+                  "display_name": "Get Status for all componets",
+                  "input_json": "$activity.definition_activity_01HO7M13BQQ252L46qCyn7kH7R4PLZzJEAz.output.response_body$",
+                  "jsonpath_queries": [
+                    {
+                      "jsonpath_query": ".plan.component[*].state[*].status",
+                      "jsonpath_query_name": "StatusArray",
+                      "jsonpath_query_type": "string"
+                    }
+                  ],
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HO4O1S4UOLC3l3rlTUw5FT11oyp6tyESI",
+                "name": "Trim String",
+                "title": "Remove Brackets",
+                "type": "core.trim_string",
+                "base_type": "activity",
+                "properties": {
+                  "characters_to_trim": "[]",
+                  "continue_on_failure": false,
+                  "display_name": "Remove Brackets",
+                  "skip_execution": false,
+                  "source": "$activity.definition_activity_01HO4LP668L6A7eGdkEKYteE2y4cV9poDcd.output.jsonpath_queries.StatusArray$",
+                  "trim_leading": true,
+                  "trim_trailing": true
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HO4Q18DB4EX7VeEg1dlEggSNkqfCtAkTD",
+                "name": "Split String",
+                "title": "Split String",
+                "type": "core.splitstring",
+                "base_type": "activity",
+                "properties": {
+                  "boundaries": [
+                    {
+                      "boundary": ","
+                    },
+                    {
+                      "boundary": "\""
+                    }
+                  ],
+                  "continue_on_failure": false,
+                  "description": "Remove commas and quotes",
+                  "display_name": "Split String",
+                  "input_string": "$activity.definition_activity_01HO4O1S4UOLC3l3rlTUw5FT11oyp6tyESI.output.trimmed$",
+                  "remove_empty": true,
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HO6047QZUTV74jvVfWIKOWs8dQgumS6jO",
+                "name": "Set Variables",
+                "title": "Set Ready Status to Ready",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Set Ready Status to Ready",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO59PZV76EJ5ZiShrDh6RFXgA2Yhmcewo$",
+                      "variable_value_new": 0
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HO4RTHQZEYQ3RSGQF60Aar3I59D2bJ6NX",
+                "name": "For Each",
+                "title": "For Each",
+                "type": "logic.for_each",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "For Each",
+                  "skip_execution": false,
+                  "source_array": "$activity.definition_activity_01HO4Q18DB4EX7VeEg1dlEggSNkqfCtAkTD.output.parts$"
+                },
+                "object_type": "definition_activity",
+                "actions": [
+                  {
+                    "unique_name": "definition_activity_01HO4SIFFF7KQ0ncROnge5kFN0ygwUjA9YL",
+                    "name": "Condition Block",
+                    "title": "Condition Block",
+                    "type": "logic.if_else",
+                    "base_type": "activity",
+                    "properties": {
+                      "continue_on_failure": false,
+                      "display_name": "Condition Block",
+                      "skip_execution": false
+                    },
+                    "object_type": "definition_activity",
+                    "blocks": [
+                      {
+                        "unique_name": "definition_activity_01HO4SIUHWL6Z7XaSD39FeLLamnQZdPxWpF",
+                        "name": "Condition Branch",
+                        "title": "Reached",
+                        "type": "logic.condition_block",
+                        "base_type": "activity",
+                        "properties": {
+                          "condition": {
+                            "left_operand": "$activity.definition_activity_01HO4RTHQZEYQ3RSGQF60Aar3I59D2bJ6NX.input.source_array[@]$",
+                            "operator": "eq",
+                            "right_operand": "reached"
+                          },
+                          "continue_on_failure": false,
+                          "display_name": "Reached",
+                          "skip_execution": false
+                        },
+                        "object_type": "definition_activity"
+                      },
+                      {
+                        "unique_name": "definition_activity_01HO4SIZSVL6Q49rmzPQ5wbnci914Xk5gTr",
+                        "name": "Condition Branch",
+                        "title": "Not Reached",
+                        "type": "logic.condition_block",
+                        "base_type": "activity",
+                        "properties": {
+                          "condition": {
+                            "left_operand": "$activity.definition_activity_01HO4RTHQZEYQ3RSGQF60Aar3I59D2bJ6NX.input.source_array[@]$",
+                            "operator": "eq",
+                            "right_operand": "not-reached"
+                          },
+                          "continue_on_failure": false,
+                          "display_name": "Not Reached",
+                          "skip_execution": false
+                        },
+                        "object_type": "definition_activity",
+                        "actions": [
+                          {
+                            "unique_name": "definition_activity_01HO4UUSL0PNV7n2GQ4oVzPyHYRJ5Jnvx5z",
+                            "name": "Set Variables",
+                            "title": "Set Ready Status to Not Ready",
+                            "type": "core.set_multiple_variables",
+                            "base_type": "activity",
+                            "properties": {
+                              "continue_on_failure": false,
+                              "display_name": "Set Ready Status to Not Ready",
+                              "skip_execution": false,
+                              "variables_to_update": [
+                                {
+                                  "variable_to_update": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO59PZV76EJ5ZiShrDh6RFXgA2Yhmcewo$",
+                                  "variable_value_new": 1
+                                }
+                              ]
+                            },
+                            "object_type": "definition_activity"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "unique_name": "definition_activity_01HO6MPSGO3K45sdPv62po2tD0E56i8ClkT",
+                "name": "Set Variables",
+                "title": "Increment Timeout count",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Increment Timeout count",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge$",
+                      "variable_value_new": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge$ + 1"
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "unique_name": "definition_activity_01HOUB7K4L5ZZ11AFF20HHennt4O96W78Hx",
+        "name": "HTTP Request",
+        "title": "Add  sdwan-site vcontroller",
+        "type": "web-service.http_request",
+        "base_type": "activity",
+        "properties": {
+          "accept": "application/yang-data+json",
+          "action_timeout": 180,
+          "allow_auto_redirect": true,
+          "body": "{\n  \"file-name\": \"/home/localadmin/ncs/project/sdwan/packages/openstack/LWR-SDWAN-LAB-serialFile.viptela\",\n  \"validity\": \"true\"\n}",
+          "continue_on_error_status_code": false,
+          "continue_on_failure": false,
+          "custom_headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/yang-data+json"
+            }
+          ],
+          "display_name": "Add  sdwan-site vcontroller",
+          "method": "POST",
+          "relative_url": "/restconf/operations/devices/device=vcontroller-Site-Openstack-Provider-SingleTenant-esc-vmanage/live-status/tailf-ned-viptela-vmanage-stats:exec/upload-vedge-list",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "override_workflow_target": true,
+            "target_id": "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU"
+          }
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01HOUE4O67HLU0GFXRUdDm9oAbETVpewEVC",
+        "name": "HTTP Request",
+        "title": "Sync uuids with provider Openstack",
+        "type": "web-service.http_request",
+        "base_type": "activity",
+        "properties": {
+          "accept": "application/yang-data+json",
+          "action_timeout": 180,
+          "allow_auto_redirect": true,
+          "body": "{\n  \"sdwan-actions:provider\": \"Openstack-Provider\"\n}",
+          "continue_on_error_status_code": false,
+          "continue_on_failure": false,
+          "custom_headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/yang-data+json"
+            }
+          ],
+          "display_name": "Sync uuids with provider Openstack",
+          "method": "POST",
+          "relative_url": "/restconf/data/sdwan-action/uuid/sync",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "override_workflow_target": true,
+            "target_id": "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU"
+          }
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01HOUKY41PO6A7eIOkbU1p1Vq38U9xnGRLZ",
+        "name": "HTTP Request",
+        "title": "Add sdwan-site vedge",
+        "type": "web-service.http_request",
+        "base_type": "activity",
+        "properties": {
+          "accept": "application/yang-data+json",
+          "action_timeout": 180,
+          "allow_auto_redirect": true,
+          "body": "{\n  \"sdwan:sdwan-site\": [\n    {\n      \"site-name\": \"LWR-VEDGE\",\n      \"provider\": \"Openstack-Provider\",\n      \"tenant\": \"SingleTenant\",\n      \"esc\": {\n        \"vnfm\": \"esc1\",\n        \"cisco-nfvo:vnfm-type\": \"netconf\",\n        \"vim-type\": \"openstack\",\n        \"nsd\": \"vEdge\",\n        \"deployment-flavor\": \"basic\",\n        \"vim-profile\": \"Openstack\",\n        \"vim-tenant\": \"admin\",\n        \"vnf-info\": [\n          {\n          \"vnf\": \"esc-vedge-onVC\",\n          \"type\": \"wanEdge\",\n          \"vnfm\": \"esc1\",\n          \"vnf-tenant\": \"admin\",\n          \"create-image\": \"false\",\n          \"create-flavor\": \"false\",\n          \"vnf-profile\": \"vEdge\",\n          \"vdu-profile\": \"vEdgeCloud-ESC\",\n          \"username\": \"admin\",\n          \"password\": \"Cisco321\",\n          \"wanEdge\": {\n            \"system-ip\": \"17.7.7.77\",\n            \"site-id\": \"877\",\n            \"deviceModel\": \"vEdge-Cloud\"\n          },\n          \"internal-connection-point\": {\n            \"id\": \"service\",\n            \"netconf-parameters\": {\n              \"address\": \"10.90.76.102  \"\n            }\n          },\n          \"ip\": \"10.90.76.102\",\n          \"mask\": \"255.255.255.0\",\n          \"gtw\": \"10.90.76.1\",\n          \"day-0\": {\n            \"cfg-file\": \"vedge_day0_openstack_template.cfg\"\n          }\n        }\n        ],\n        \"sap-info\": [\n          {\n          \"id\": \"mgmt\",\n          \"network-name\": \"private\"\n          },\n          {\n          \"id\": \"service\",\n          \"network-name\": \"flat-provider-network\"\n          }\n        ]\n      }\n    }\n  ]\n}",
+          "continue_on_error_status_code": false,
+          "continue_on_failure": false,
+          "custom_headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/yang-data+json"
+            }
+          ],
+          "display_name": "Add sdwan-site vedge",
+          "method": "PATCH",
+          "relative_url": "/restconf/data",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "override_workflow_target": true,
+            "target_id": "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU"
+          }
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01HOUMYZ7UAIQ3a2gpTkDcOLgkPxI4KvS2Z",
+        "name": "While Loop",
+        "title": "Get Status SDWAN - vedge (while)",
+        "type": "logic.while",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Get Status SDWAN - vedge (while)",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01HOUMZB8OJ912aaOIXpa7AFvPFJW1a74Lt",
+            "name": "Condition Branch",
+            "title": "Condition Branch",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": {
+                  "left_operand": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO59PZV76EJ5ZiShrDh6RFXgA2Yhmcewo$",
+                  "operator": "eq",
+                  "right_operand": 1
+                },
+                "operator": "or",
+                "right_operand": {
+                  "left_operand": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge$",
+                  "operator": "gt",
+                  "right_operand": 20
+                }
+              },
+              "continue_on_failure": false,
+              "display_name": "Condition Branch",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01HOUMZF5E6YA18ayfexWYhCYQRPEzXEttG",
+                "name": "Sleep",
+                "title": "Sleep for 30 Seconds",
+                "type": "core.sleep",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Sleep for 30 Seconds",
+                  "skip_execution": false,
+                  "sleep_interval": 30
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HOUMZKRYZEF7FB4HGVc48HJKfCYuBlijq",
+                "name": "HTTP Request",
+                "title": "Get sdwan-status - vedge",
+                "type": "web-service.http_request",
+                "base_type": "activity",
+                "properties": {
+                  "accept": "application/yang-data+json",
+                  "action_timeout": 180,
+                  "allow_auto_redirect": true,
+                  "continue_on_error_status_code": false,
+                  "continue_on_failure": false,
+                  "display_name": "Get sdwan-status - vedge",
+                  "method": "GET",
+                  "relative_url": "/restconf/data/sdwan-status/sdwan-site=LWR-VEDGE,Openstack-Provider,SingleTenant",
+                  "runtime_user": {
+                    "override_target_runtime_user": false,
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU"
+                  }
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HOUMZO8K10K7IXS9hhtdgXLitX9zXiGtf",
+                "name": "JSONPath Query",
+                "title": "Get Status for all componets",
+                "type": "corejava.jsonpathquery",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "continue_on_failure": false,
+                  "display_name": "Get Status for all componets",
+                  "input_json": "$activity.definition_activity_01HOUMZKRYZEF7FB4HGVc48HJKfCYuBlijq.output.response_body$",
+                  "jsonpath_queries": [
+                    {
+                      "jsonpath_query": ".plan.component[*].state[*].status",
+                      "jsonpath_query_name": "StatusArray",
+                      "jsonpath_query_type": "string"
+                    }
+                  ],
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HOUMZTTLSFC2We5oPFJqHNmlbCyBb0mdA",
+                "name": "Trim String",
+                "title": "Remove Brackets",
+                "type": "core.trim_string",
+                "base_type": "activity",
+                "properties": {
+                  "characters_to_trim": "[]",
+                  "continue_on_failure": false,
+                  "display_name": "Remove Brackets",
+                  "skip_execution": false,
+                  "source": "$activity.definition_activity_01HOUMZO8K10K7IXS9hhtdgXLitX9zXiGtf.output.jsonpath_queries.StatusArray$",
+                  "trim_leading": true,
+                  "trim_trailing": true
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HOUN0082ABA6mAybnOfprpE8Do1Oy1TeG",
+                "name": "Split String",
+                "title": "Split String",
+                "type": "core.splitstring",
+                "base_type": "activity",
+                "properties": {
+                  "boundaries": [
+                    {
+                      "boundary": ","
+                    },
+                    {
+                      "boundary": "\""
+                    }
+                  ],
+                  "continue_on_failure": false,
+                  "description": "Remove commas and quotes",
+                  "display_name": "Split String",
+                  "input_string": "$activity.definition_activity_01HOUMZTTLSFC2We5oPFJqHNmlbCyBb0mdA.output.trimmed$",
+                  "remove_empty": true,
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HOUN04D0G785Cm7onS7S7Rq7sUI6RuLIv",
+                "name": "Set Variables",
+                "title": "Set Ready Status to Ready",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Set Ready Status to Ready",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO59PZV76EJ5ZiShrDh6RFXgA2Yhmcewo$",
+                      "variable_value_new": 0
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HOUN09DQWVZ1jAJrKxVvicLvCZeI1GcRf",
+                "name": "For Each",
+                "title": "For Each",
+                "type": "logic.for_each",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "For Each",
+                  "skip_execution": false,
+                  "source_array": "$activity.definition_activity_01HOUN0082ABA6mAybnOfprpE8Do1Oy1TeG.output.parts$"
+                },
+                "object_type": "definition_activity",
+                "actions": [
+                  {
+                    "unique_name": "definition_activity_01HOUN0I2PT234ZQusNDY7OeZ4ITD4iDHcs",
+                    "name": "Condition Block",
+                    "title": "Condition Block",
+                    "type": "logic.if_else",
+                    "base_type": "activity",
+                    "properties": {
+                      "continue_on_failure": false,
+                      "display_name": "Condition Block",
+                      "skip_execution": false
+                    },
+                    "object_type": "definition_activity",
+                    "blocks": [
+                      {
+                        "unique_name": "definition_activity_01HOUN0P1K6ZG4njkgc1gqSOPHNUF2NnJcM",
+                        "name": "Condition Branch",
+                        "title": "Reached",
+                        "type": "logic.condition_block",
+                        "base_type": "activity",
+                        "properties": {
+                          "condition": {
+                            "left_operand": "$activity.definition_activity_01HOUN09DQWVZ1jAJrKxVvicLvCZeI1GcRf.input.source_array[@]$",
+                            "operator": "eq",
+                            "right_operand": "reached"
+                          },
+                          "continue_on_failure": false,
+                          "display_name": "Reached",
+                          "skip_execution": false
+                        },
+                        "object_type": "definition_activity"
+                      },
+                      {
+                        "unique_name": "definition_activity_01HOUN0UFIMUL1fLhF5zC3pIs2R6EGQXCV0",
+                        "name": "Condition Branch",
+                        "title": "Not Reached",
+                        "type": "logic.condition_block",
+                        "base_type": "activity",
+                        "properties": {
+                          "condition": {
+                            "left_operand": "$activity.definition_activity_01HOUN09DQWVZ1jAJrKxVvicLvCZeI1GcRf.input.source_array[@]$",
+                            "operator": "eq",
+                            "right_operand": ""
+                          },
+                          "continue_on_failure": false,
+                          "display_name": "Not Reached",
+                          "skip_execution": false
+                        },
+                        "object_type": "definition_activity",
+                        "actions": [
+                          {
+                            "unique_name": "definition_activity_01HOUN0ZUDSZL6qo9czRicHsLw8oCJsgQjq",
+                            "name": "Set Variables",
+                            "title": "Set Ready Status to Not Ready",
+                            "type": "core.set_multiple_variables",
+                            "base_type": "activity",
+                            "properties": {
+                              "continue_on_failure": false,
+                              "display_name": "Set Ready Status to Not Ready",
+                              "skip_execution": false,
+                              "variables_to_update": [
+                                {
+                                  "variable_to_update": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO59PZV76EJ5ZiShrDh6RFXgA2Yhmcewo$",
+                                  "variable_value_new": 1
+                                }
+                              ]
+                            },
+                            "object_type": "definition_activity"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "unique_name": "definition_activity_01HOUN1554BG83nz6zNx6s8XcDgEfKXRy9m",
+                "name": "Set Variables",
+                "title": "Increment Timeout count",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Increment Timeout count",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge$",
+                      "variable_value_new": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge$ + 1"
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "unique_name": "definition_activity_01HOV2A3HK02E3fSElJdrzkxuFE2YqZjYAw",
+        "name": "HTTP Request",
+        "title": "Add Provider ENCS",
+        "type": "web-service.http_request",
+        "base_type": "activity",
+        "properties": {
+          "accept": "application/yang-data+json",
+          "action_timeout": 180,
+          "allow_auto_redirect": true,
+          "body": "{\n  \"core-fp-common:provider-infrastructure\": [\n    {\n      \"provider\": \"ENCS-Provider\",\n      \"branch-infra-common:catalog\": \"Gold\",\n      \"sdwan:vmanage\": \"vcontroller-Site-Openstack-Provider-SingleTenant-esc-vmanage\",\n      \"sdwan:catalog\": \"Gold\",\n      \"sdwan:alias\": \"LWR-SDWAN01\",\n      \"sdwan:vbond-ipaddress\": \"10.90.76.100\",\n      \"sdwan:vbond-port\": \"12346\",\n      \"sdwan:certificate-details\": {\n        \"ca-server-scep-url\": \"http://172.23.80.83/scep/scep-server-1\",\n        \"sscep-path\": \"/usr/bin/sscep\",\n        \"pass-phrase\": \"SecretChallenge\",\n        \"signature-key\": \"-----BEGIN ENCRYPTED PRIVATE KEY-----\nMIIFHDBOBgkqhkiG9w0BBQ0wQTApBgkqhkiG9w0BBQwwHAQIBgghqlrcIeICAggA\nMAwGCCqGSIb3DQIJBQAwFAYIKoZIhvcNAwcECJI4fq2+4GRjBIIEyDO6lhW6uSnA\n5ZXE56SbzKPBtOvmAtz8qRP5nad1Dd/T3b/XC2+4WY1QxjFtZa3ViU3L8tlqiDs4\n0WOyQM1MNwIcY4eFJcw/7/TcBoGRd1J5HkMaGxzApR1+VJiN5GCXat5HWWhH/AnK\niUO7m4tedkjANXSU9o3xvx4y/PZRNu0cZ6Z4+vLpAtin3Sf8oDQCgoiy9bz0gW1B\nDjBqn/YlbH2KTOJ3+nHsUAUxDMGrYDlSHr5SYd8IaV8D512nJA7wYO5M4CqJWh7F\nMW7Fg/nK4DrpLwKr5UHcm6BwgMm/p5lbRFTA4otgQEAcrjR0rm1Zi71LNds83Rbu\n1FgdtDAbVjyEs2rVI76R07tGTrLwNuYmaY8XribfG8JolhAywt4uI6leWcXmVz+O\nM4AyznS/JzhjB7AbmA48jfliwdARnaAg/fMR3pokLvBVUDug00VCNoSLwTETZVQY\nvuTpSVH5ASlm0PVcGSDebpkNNi8mBkvbMVmN5xgaTsp673XPOJvRc07mGtZVPWnG\nWtd+Xt0I9XTTmW0U6xikd56fiio1BAUlm0kp4rYMGhxWQeXEpXtsW/KbBtLrA8Xq\nC6rDAaO+miMbY1U+MylemRSecFwSEo4GPDqaAsWAx3YsSHp1evdRdKEN8fdS00wb\n0Yv32t77ep3elAiHd8GECGgMo7BQniAvSTntgq1C7duKDnlBekxQ92UgEpeTBvI7\n7zzU2mY6MoFOrg/IJpWCutelCHbTDJ1Y0nw3WhKlPWdyLIcJbf3uKe4P5la7/wPG\n6fvz1tub7Yb9gG8y/W7Uh+v8yZWUNVGTsYxqr6rtsFGrplr7KGbrqf/4M8V+cZ/w\n5svjXR5h3PF8avWDCHRaDpHqfl8GYunS69UgxNW/5FL/XeZ1zYRfOHRMvLh6mxym\n9EXpCp3dlicSCMNhao2p05J70zabUevk5ThJhYF7I6EaP1WDtzMupCzIvXG0kc5u\n93XVbDwjRH6ivwsQ2c4xrpcapTFHS5Zp5XxkSLimXbwpn6NFX/f1tlUdL1gzVu5U\niSidsnIDyvrUSn0ulISq5593SI0/edgjAN4RhbsAZ3tuEayR36ElUepNW36mvOgL\nehVUd28VGrVUddOm0xeG8fVkjOwx3Ly70ROC5g68EoHfEtBBKydj4aNjqT6b6nyb\noHw4eTqagcrxs01G/jJDOcLVke8CUgKEXjSIHNATwobvZLWKe9WmdPSXBRBH+TB4\nr6NkR7YKJ47yjpdqKiTrYfiPt2npIAH0dJ26s2rF0J89ZAfmyN9KBao3CVRYmFcC\nkXkXUUnJ3AByVdB/xoZkcdYWHuqGkhIybVvGupGKzxUvlpfH7smYoyu4dpY7J67/\nFkp2t0OSEnzX5SVEJH5t480jGd6GPwaBg7T6mYIb0B8i9g9S/9qtOotQ/168yxVZ\ncd1jyAoRPUnkame5xHUxbsOgf7DDTyHF5BtRT2nmg9U8vkAfhABEHS1EuuBxs+Un\nRW7KGsJlSJ1puLO3h1BLunu4I8L2De22IeO0h8Y47xiXVUTkK/txz98uVMYRV/hq\nkOtXqXEacx45RS+0ZXvHiVRrwJ40Rt64jdGfl9gyuWVOrjkGzeyyL0amLvs7pj+5\nwzCxzuvrm84PrWFHkBQJLA==\n-----END ENCRYPTED PRIVATE KEY-----\",\n       \"signature-cert\": \"-----BEGIN CERTIFICATE-----\nMIIHBTCCBe2gAwIBAgILAXD/HGCUo2+WM6MwDQYJKoZIhvcNAQELBQAwgYwxCzAJ\nBgNVBAYTAlVTMQswCQYDVQQIDAJDQTERMA8GA1UEBwwIU2FuIEpvc2UxFDASBgNV\nBAoMC1NpZ25lci1DZXJ0MRgwFgYDVQQLDA9OU08tU2lnbmVyLUNlcnQxDzANBgNV\nBAMMBlNpZ25lcjEcMBoGCSqGSIb3DQEJARYNbnNvQGNpc2NvLmNvbTAeFw0yMDA0\nMzAyMzQxMTlaFw0yMDEwMzAyMzQxMTlaMHAxCzAJBgNVBAYTAlVTMQswCQYDVQQI\nDAJHQTEMMAoGA1UEBwwDQVRMMQswCQYDVQQKDAJDTjELMAkGA1UECwwCQ04xDTAL\nBgNVBAMMBHZpbm0xHTAbBgkqhkiG9w0BCQEWDnZpbm1AY2lzY28uY29tMIIBIjAN\nBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAysIbWVahsraL4jzy0SewZ8AAYSsb\nISXQF3nvaYt23LGMOhWm2vM+y9fuvdwFKKEaUHKvMdBXEfnDO5y4LvsbaiTkF0tt\nn+9TGA3uhdHhis9VUAc4rYMYBURe/MUuRoZJa/ew2uLKZMbjbtkxlN4N5BikmkRP\nk2qJPwg16lsrJ/XSmghQyinAHLEUn0xfeXqg3yyaKoUoBYJ+fHEvIrGZcHC0a2Cw\nC7wffDxjgfaTFP342xFl89lMRvkO43GZRRd019x2k8Wb4sM6aAgG95REu1wwxPR7\n31G0ldHAfZHJbjtMz8gDT0oxn4qPCkzB6rP9nOO4+hadecXcHdjlRi6Z/wIDAQAB\no4IDgTCCA30wXgYIKwYBBQUHAQEEUjBQMCcGCCsGAQUFBzAChhtodHRwOi8vbG9j\nYWxob3N0L2NhY2VydC5jcnQwJQYIKwYBBQUHMAGGGWh0dHA6Ly9vY3NwLm9wZW54\ncGtpLm9yZy8wgbIGA1UdIwSBqjCBp4AUiTUGN/rL6ji+DOr9S62KvlejSpShgYuk\ngYgwgYUxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTERMA8GA1UEBwwIU2FuIEpv\nc2UxEjAQBgNVBAoMCVJvb3QtQ2VydDEVMBMGA1UECwwMQ0EtUm9vdF9jZXJ0MQ0w\nCwYDVQQDDARyb290MRwwGgYJKoZIhvcNAQkBFg1uc29AY2lzY28uY29tggEBMAwG\nA1UdEwEB/wQCMAAwgaYGA1UdHwSBnjCBmzAloCOgIYYfaHR0cDovL2xvY2FsaG9z\ndC9jcmwvU2lnbmVyLnBlbTByoHCgboZsbGRhcDovL2xvY2FsaG9zdC9lbWFpbEFk\nZHJlc3M9bnNvQGNpc2NvLmNvbSxDTj1TaWduZXIsT1U9TlNPLVNpZ25lci1DZXJ0\nLE89U2lnbmVyLUNlcnQsTD1TYW4gSm9zZSxTVD1DQSxDPVVTMBYGA1UdJQEB/wQM\nMAoGCCsGAQUFBwMBMAkGA1UdEgQCMAAwDgYDVR0PAQH/BAQDAgWgMCkGCWCGSAGG\n+EIBBAQcFhpodHRwOi8vbG9jYWxob3N0L2NhY3JsLmNydDApBglghkgBhvhCAQME\nHBYaaHR0cDovL2xvY2FsaG9zdC9jYWNybC5jcnQwWwYJYIZIAYb4QgENBE4WTFRo\naXMgaXMgYSBnZW5lcmljIGNlcnRpZmljYXRlLiBHZW5lcmF0ZWQgd2l0aCBPcGVu\nWFBLSSB0cnVzdGNlbnRlciBzb2Z0d2FyZS4wgakGA1UdIASBoTCBnjAFBgMqAwUw\ngZQGAyoDBDCBjDAoBggrBgEFBQcCARYcaHR0cDovL29wZW54cGtpLm9yZy9jcHMu\naHRtbDAoBggrBgEFBQcCARYcaHR0cDovL29wZW54cGtpLm5ldC9jcHMuaHRtbDA2\nBggrBgEFBQcCAjAqGihUaGlzIGlzIGEgY29tbWVudCBmb3IgcG9saWN5IG9pZCAx\nLjIuMy40MB0GA1UdDgQWBBTBjBigzHiMImyx4DWfxPGOwSiFaDANBgkqhkiG9w0B\nAQsFAAOCAQEAW1r7OLiUf/+DWuLIHlIe8d+biybPGlOtghXqWbPd8O3IFrD1T2RC\nerUhLZ7NetRN35JiSyrGn0Jjm5hvfCpLT/y+nSChyuKTv73wySITPkYipaPBbbAr\na8FEzg1HpNXq3AbhjXyJ8RmO2g7+i8TGagHAcRrODVdw+DgQ8J/anQmIehjr0LRh\n9RW+dyIC7mXvahhfpSj/MEHq9GRq75Yg8nmU/g5jnLhEwl/MJ2EWo1vTXx2SdK1g\njR3/eSsNEl4sG/IS7rWl7mlxoZuECnoxDUHFwS6ia9LGQmAMYjYV0grLoAsFRmEO\nP0toKONIgYP7u56/mZHxF/DdLZs7wcPHgg==\n-----END CERTIFICATE-----\",\n        \"root-cert\": \"-----BEGIN CERTIFICATE-----\nMIIDgTCCAmkCAQIwDQYJKoZIhvcNAQELBQAwgYUxCzAJBgNVBAYTAlVTMQswCQYD\nVQQIDAJDQTERMA8GA1UEBwwIU2FuIEpvc2UxEjAQBgNVBAoMCVJvb3QtQ2VydDEV\nMBMGA1UECwwMQ0EtUm9vdF9jZXJ0MQ0wCwYDVQQDDARyb290MRwwGgYJKoZIhvcN\nAQkBFg1uc29AY2lzY28uY29tMB4XDTIwMDIxNDAwMTUwOFoXDTIyMDIxMzAwMTUw\nOFowgYYxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTERMA8GA1UEBwwIU2FuIEpv\nc2UxEjAQBgNVBAoMCVNDRVAtY2VydDEWMBQGA1UECwwNU0NFUC1uc28tY2VydDEN\nMAsGA1UEAwwEU0NFUDEcMBoGCSqGSIb3DQEJARYNbnNvQGNpc2NvLmNvbTCCASIw\nDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALAdDvwjaLzwPAuWxfWyz52wJRix\n7keTeeckFE8P1CUIu+7qh8QUn/cFbx5pHc4Ss/MYIlra84+0Lh239gJ/XDiKL+kJ\n7PcZsuYrmHJXQ2+HvM8ZmOnVwxuJG+K75Qfi9wkrMUpJh5iiCsVXdHZ3Z8ybsQxt\nwmI5lqcmaV66ajogGPcLarH8IdQmPy1Er3GlN2aTUyz4+N2TsLFXiIfpbSe5NLcF\nD7tFW4giFIsCPi33yem44bylTQXY68toOskxMm7IjqVgXGxKUgP8iXqzVKTac05j\n1oYJ5O/3T3m/MuF4Q0MD1PeCB6TkWaedz3F/mQyRXnKb2aPvDBWKyFOT4RUCAwEA\nATANBgkqhkiG9w0BAQsFAAOCAQEAtOLBKAi1KU8MKLFB2CYzzSCPDZlN6Zs4Pmdc\nL8Dzz9d4rkeS4Nhv6cNFXhkKFBUK2Kom5auJ81DH1pS1+5SXN8odqc3s8p0SnqQY\nDiAj0DPNjxcCePxRbi0O3E3z+VfprcW+mEQQdwIrcKFGJTn40Qi4J8qn/EqIj6b6\nPKqiGgUyoHppN8JxvVlcHjdh05LntrLxSxrssOtT4frrSLwEjj1+2nyWjvAtOyDN\nr7eoqylZR7tavE7dezaGaq8p5ZjHVSAJCq6lHTsU19ApXmlDg3vT2ELvBX613Akc\nCeTKGAt2A6WbJfbpUqlB6kAcYbHAioH2z7kMg5Jr+e4eLsih5g==\n-----END CERTIFICATE-----\"\n      },\n      \"sdwan:ca-cert\": \"-----BEGIN CERTIFICATE-----\nMIID3jCCAsagAwIBAgIBATANBgkqhkiG9w0BAQsFADCBhTELMAkGA1UEBhMCVVMx\nCzAJBgNVBAgMAkNBMREwDwYDVQQHDAhTYW4gSm9zZTESMBAGA1UECgwJUm9vdC1D\nZXJ0MRUwEwYDVQQLDAxDQS1Sb290X2NlcnQxDTALBgNVBAMMBHJvb3QxHDAaBgkq\nhkiG9w0BCQEWDW5zb0BjaXNjby5jb20wHhcNMjAwMjE0MDAxMzE1WhcNMjIwMjEz\nMDAxMzE1WjCBjDELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAkNBMREwDwYDVQQHDAhT\nYW4gSm9zZTEUMBIGA1UECgwLU2lnbmVyLUNlcnQxGDAWBgNVBAsMD05TTy1TaWdu\nZXItQ2VydDEPMA0GA1UEAwwGU2lnbmVyMRwwGgYJKoZIhvcNAQkBFg1uc29AY2lz\nY28uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvvqO4Z4izZcf\nVwa1uY6CydJ+YTzKYmXTwsRYSW9uLHXvEVPP4p4W//Hy1Y4UE/PUBJuf+sYn2eIf\n5kfSpf5PzFskxx3hBck1Z8j1RxYHpayZqkz9AoJy3vPnRGDFSpwdhHCS1ZsiwQyT\nCulwkKp9aWBcdFVsJv4iAVfBgQNsHpoCPxJw2fZcCqsgf3j/oIwEkcky54DVdmDm\ney/EPVv4dRS31Or/tJxqc9ffw1EJOtx/SwZDu77Djjz6Mz9fId8/oRF2ka1jTd+H\nLtE8kT5UnrEryKf/cBJGrWTQf+jKgtI5gcZljC2LmqrKu9VNROKHVKazJ0mP6VRJ\njLgY1+QP6QIDAQABo1AwTjAdBgNVHQ4EFgQUiTUGN/rL6ji+DOr9S62KvlejSpQw\nHwYDVR0jBBgwFoAUk7F+3iTqjRL+l3DUJZK2YWAJDNUwDAYDVR0TBAUwAwEB/zAN\nBgkqhkiG9w0BAQsFAAOCAQEAVoyBy5eV2GKBOUwEbWk/8nu0K/Zc8QVU0f+hop8e\nuB1c9O1kHsLvt0qa4IQNU9cbbQXh44k1Hom7ABsvGWbAz6nrmeWFidF5jZ6/SvRy\nNHIv31+O2pfIf6Iv1uz2moCgNHyeAHRGxdt32ejwztN7m13xKnvvYmQCSmnez3W+\nki0lQhjJfFSka53FxyAzFUIMrdotvAMLP0Jd5lc1QF7F8zkQfzSveGTY6945GYtv\nDilam31d8ecmKkmKXZhqQDJTvLMOv0gh67rmowx4HdYqtJ8a7HVjb+MSsPhrcJ9c\nbrjGbcHsw9BxO2SVbLWedcDk0DaKMNK+rz8iOnKAoBRZFQ==\n-----END CERTIFICATE-----\n-----BEGIN CERTIFICATE-----\nMIID3zCCAsegAwIBAgIJANwDU8wGujhmMA0GCSqGSIb3DQEBCwUAMIGFMQswCQYD\nVQQGEwJVUzELMAkGA1UECAwCQ0ExETAPBgNVBAcMCFNhbiBKb3NlMRIwEAYDVQQK\nDAlSb290LUNlcnQxFTATBgNVBAsMDENBLVJvb3RfY2VydDENMAsGA1UEAwwEcm9v\ndDEcMBoGCSqGSIb3DQEJARYNbnNvQGNpc2NvLmNvbTAeFw0yMDAyMTQwMDA5MzBa\nFw0yMjAyMTMwMDA5MzBaMIGFMQswCQYDVQQGEwJVUzELMAkGA1UECAwCQ0ExETAP\nBgNVBAcMCFNhbiBKb3NlMRIwEAYDVQQKDAlSb290LUNlcnQxFTATBgNVBAsMDENB\nLVJvb3RfY2VydDENMAsGA1UEAwwEcm9vdDEcMBoGCSqGSIb3DQEJARYNbnNvQGNp\nc2NvLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMViy6kTbr1l\nT7DdHFUJzYc7I0SsMeGo2kIz9zBiVHph7+9w1vgzqgpbFdc2PXK+nrL3jnm3qbyC\npJJ+DWNHJzkGqATAxdaihEIFR8Abs+zUJvp8nNao5iRxSdvP/MpEFDwFL/kBN1OW\naCWRn+z8lf4wv5GxIblhqr+j6dxj9OiGu0+hOTryJEjJJJvsdDJVw2d+ORG+dMYr\n179LYZLVKV4tehkNxxXEjx/rDxnNnNj7MmuFbjojByDmpF78rdDPrCt3kkBl4GAS\nW3P/Z2qvvHtm18Wxy+SPG4y9Ax3BnIBYjbYL5Plaxsto8kJJZSXGJSiSMepD7R7g\nkrRfSOZRodECAwEAAaNQME4wHQYDVR0OBBYEFJOxft4k6o0S/pdw1CWStmFgCQzV\nMB8GA1UdIwQYMBaAFJOxft4k6o0S/pdw1CWStmFgCQzVMAwGA1UdEwQFMAMBAf8w\nDQYJKoZIhvcNAQELBQADggEBAEcC9qhDWMLqW7mc2p0G5dvY/9CHIm9zxhLCS68E\netaAf7c+yQ78HpqxwqGODMtG0mk+0Teda4IfbjLF9Mf308ewIu0s74THjjGCbJ4g\n5SUMQjQoe+CxJXtWmUTDEPEIRbuexRAw7Gd299qaN3/nAkdodh5v6g1cP9/Ycdmj\nS/rTxcq73e5RxHLjAQVF8F5aFR06DNIbiKHrXIADzDtzRdcIEP1iUYauoYsEIs8b\nfvnwbwsSxcrJUWZoz/4ls7nf3uwlb41Nb6ui9VZY7EJ15EXNdsZk3x3vg6XOCgqt\nngkJRzMfUJIOuyXUXHe5VyMctidO9+Sg5fl8D/x3wcK9Y50=\n-----END CERTIFICATE-----\"\n    }\n  ]\n}",
+          "continue_on_error_status_code": false,
+          "continue_on_failure": false,
+          "custom_headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/yang-data+json"
+            }
+          ],
+          "display_name": "Add Provider ENCS",
+          "method": "PATCH",
+          "relative_url": "/restconf/data",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "override_workflow_target": true,
+            "target_id": "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU"
+          }
+        },
+        "object_type": "definition_activity"
+      }
+    ],
+    "categories": [
+      "category_1BMfMXSnJMyt5Ihqi7rWJr5N8cf"
+    ]
+  },
+  "targets": {
+    "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU": {
+      "unique_name": "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU",
+      "name": "NSO 5.2.1.1",
+      "title": "NSO 5.2.1.1",
+      "type": "web-service.endpoint",
+      "base_type": "target",
+      "object_type": "definition_target",
+      "properties": {
+        "default_runtime_user_id": "definition_runtime_user_01HC1IIXAB3PW286QtvBJpS9pm4qreUdZM4",
+        "disable_certificate_validation": false,
+        "display_name": "NSO 5.2.1.1",
+        "host": "10.90.76.49",
+        "ignore_proxy": false,
+        "no_runtime_user": false,
+        "port": 8080,
+        "protocol": "http"
+      }
+    }
+  },
+  "runtime_users": {
+    "definition_runtime_user_01HC1IIXAB3PW286QtvBJpS9pm4qreUdZM4": {
+      "unique_name": "definition_runtime_user_01HC1IIXAB3PW286QtvBJpS9pm4qreUdZM4",
+      "name": "admin",
+      "title": "admin",
+      "type": "runtime_user.web-service_basic_credentials",
+      "base_type": "runtime_user",
+      "object_type": "definition_runtime_user",
+      "properties": {
+        "auth_option": "*****",
+        "basic_password": "*****",
+        "basic_username": "*****",
+        "display_name": "admin"
+      }
+    }
+  }
+}
