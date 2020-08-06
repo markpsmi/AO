@@ -1,0 +1,501 @@
+{
+  "workflow": {
+    "unique_name": "definition_workflow_01HT3VUC9GUJJ78TTyryRkqxxKOlzA9zSpC",
+    "name": "NSO SDWAN Demo vEdge Openstack",
+    "title": "NSO SDWAN Demo vEdge Openstack",
+    "type": "generic.workflow",
+    "base_type": "workflow",
+    "variables": [
+      {
+        "schema_id": "datatype.integer",
+        "properties": {
+          "value": 1,
+          "scope": "output",
+          "name": "Ready",
+          "type": "datatype.integer",
+          "is_required": false
+        },
+        "unique_name": "variable_workflow_01HT3VUAE3RVN61ozQOWBph267obOwByhqz",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.integer",
+        "properties": {
+          "value": 0,
+          "scope": "output",
+          "name": "TimeOutCounter",
+          "type": "datatype.integer",
+          "is_required": false
+        },
+        "unique_name": "variable_workflow_01HT3VUAE3XKG70YaUbnmuflE5OO7vq4962",
+        "object_type": "variable_workflow"
+      },
+      {
+        "schema_id": "datatype.string",
+        "properties": {
+          "value": "{\n  \"sdwan:sdwan-site\": {\n    \"site-name\": \"vcontroller-Site\",\n    \"provider\": \"Openstack-Provider\",\n    \"tenant\": \"SingleTenant\",\n    \"plan\": {\n      \"component\": [\n        {\n          \"type\": \"tailf-ncs:self\",\n          \"name\": \"self\",\n          \"state\": [\n            {\n              \"name\": \"tailf-ncs:init\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T16:58:37.9772+00:00\",\n              \"pre-conditions\": {\n                \"delete-monitor\": \"$PLAN\",\n                \"delete-trigger-expr\": \"not(component[type != 'ncs:self'])\"\n              }\n            },\n            {\n              \"name\": \"tailf-ncs:ready\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:08:48.358522+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$PLAN\",\n                \"create-trigger-expr\": \"not(component[type != 'ncs:self']/state[name = 'ncs:ready'][status != 'reached']) or component[type != 'ncs:self']/state/status = 'failed' or component[type != 'ncs:self']/state/post-action-status = 'failed'\"\n              }\n            }\n          ],\n          \"back-track\": false\n        },\n        {\n          \"type\": \"sdwan:esc\",\n          \"name\": \"esc1\",\n          \"state\": [\n            {\n              \"name\": \"tailf-ncs:init\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T16:58:37.9772+00:00\",\n              \"pre-conditions\": {\n                \"delete-monitor\": \"$PLAN\",\n                \"delete-trigger-expr\": \"not(component[type = 'sdwan:esc-wanEdge']) and not(component[type = 'sdwan:vManage']) and not(component[type = 'sdwan:vManage-cluster']) and not(component[type = 'sdwan:vBond']) and not(component[type = 'sdwan:vSmart'])\"\n              },\n              \"message\": \"-\",\n              \"error-code\": \"-\"\n            },\n            {\n              \"name\": \"tailf-ncs:ready\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T16:58:37.9772+00:00\",\n              \"message\": \"-\",\n              \"error-code\": \"-\"\n            }\n          ],\n          \"back-track\": false\n        },\n        {\n          \"type\": \"sdwan:vBond\",\n          \"name\": \"esc-vbond\",\n          \"state\": [\n            {\n              \"name\": \"tailf-ncs:init\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T16:58:37.9772+00:00\",\n              \"message\": \"-\"\n            },\n            {\n              \"name\": \"sdwan:onboard\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:00:12.867856+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"/virtual-device-infrastructure:virtual-device-infra-status/virtual-device-infrastructure:virtual-device-infra[name=$SITE_NAME][provider=$PROVIDER][tenant=$TENANT]/plan\",\n                \"create-trigger-expr\": \"component[type='virtual-device-infrastructure:vnf'][name=$VNF]/state[name='ncs:ready']/status != 'not-reached'\",\n                \"delete-monitor\": \"/virtual-device-infrastructure:virtual-device-infra-status\",\n                \"delete-trigger-expr\": \"not(virtual-device-infrastructure:virtual-device-infra[name=$SITE_NAME][provider=$PROVIDER][tenant=$TENANT]/plan/component[type='virtual-device-infrastructure:vnf'][name=$VNF])\"\n              },\n              \"message\": \"-\"\n            },\n            {\n              \"name\": \"sdwan:template\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:00:12.867856+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/opdata/vnf-deployment-unit\",\n                \"create-trigger-expr\": \"apply-template-mode = 'NOOP' or apply-template-mode = 'SUCCESS'\"\n              },\n              \"message\": \"Not Applicable\"\n            },\n            {\n              \"name\": \"sdwan:add-controller\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:06:37.478807+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/controller-add\",\n                \"create-trigger-expr\": \"state = 'DONE' or state = 'FAILED'\"\n              }\n            },\n            {\n              \"name\": \"sdwan:generate-csr\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:07:52.227666+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/generate-csr\",\n                \"create-trigger-expr\": \"state = 'DONE' or state = 'FAILED'\"\n              }\n            },\n            {\n              \"name\": \"sdwan:certificate-install\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:08:07.476282+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/install-cert\",\n                \"create-trigger-expr\": \"state = 'DONE'or state = 'FAILED' \"\n              }\n            },\n            {\n              \"name\": \"tailf-ncs:ready\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:08:07.476282+00:00\"\n            }\n          ],\n          \"back-track\": false\n        },\n        {\n          \"type\": \"sdwan:vManage\",\n          \"name\": \"esc-vmanage\",\n          \"state\": [\n            {\n              \"name\": \"tailf-ncs:init\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T16:58:37.9772+00:00\",\n              \"message\": \"-\"\n            },\n            {\n              \"name\": \"sdwan:onboard\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:06:01.054937+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"/virtual-device-infrastructure:virtual-device-infra-status/virtual-device-infrastructure:virtual-device-infra[name=$SITE_NAME][provider=$PROVIDER][tenant=$TENANT]/plan\",\n                \"create-trigger-expr\": \"component[type='virtual-device-infrastructure:vnf'][name=$VNF]/state[name='ncs:ready']/status != 'not-reached'\",\n                \"delete-monitor\": \"/virtual-device-infrastructure:virtual-device-infra-status\",\n                \"delete-trigger-expr\": \"not(virtual-device-infrastructure:virtual-device-infra[name=$SITE_NAME][provider=$PROVIDER][tenant=$TENANT]/plan/component[type='virtual-device-infrastructure:vnf'][name=$VNF])\"\n              },\n              \"message\": \"-\"\n            },\n            {\n              \"name\": \"sdwan:template\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:06:01.054937+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/opdata/vnf-deployment-unit\",\n                \"create-trigger-expr\": \"apply-template-mode = 'NOOP' or apply-template-mode = 'SUCCESS'\"\n              },\n              \"message\": \"Not Applicable\"\n            },\n            {\n              \"name\": \"sdwan:device-sync\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:06:06.252941+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/device-synced\",\n                \"create-trigger-expr\": \"state = 'DONE' or state = 'FAILED'\"\n              }\n            },\n            {\n              \"name\": \"sdwan:generate-csr\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:07:52.227666+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/generate-csr\",\n                \"create-trigger-expr\": \"state = 'DONE' or state = 'FAILED'\"\n              }\n            },\n            {\n              \"name\": \"sdwan:certificate-install\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:08:29.380763+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/install-cert\",\n                \"create-trigger-expr\": \"state = 'DONE'or state = 'FAILED' \"\n              }\n            },\n            {\n              \"name\": \"tailf-ncs:ready\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:08:29.380763+00:00\"\n            }\n          ],\n          \"back-track\": false\n        },\n        {\n          \"type\": \"sdwan:vSmart\",\n          \"name\": \"esc-vsmart\",\n          \"state\": [\n            {\n              \"name\": \"tailf-ncs:init\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T16:58:37.9772+00:00\",\n              \"message\": \"-\"\n            },\n            {\n              \"name\": \"sdwan:onboard\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T16:59:51.113932+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"/virtual-device-infrastructure:virtual-device-infra-status/virtual-device-infrastructure:virtual-device-infra[name=$SITE_NAME][provider=$PROVIDER][tenant=$TENANT]/plan\",\n                \"create-trigger-expr\": \"component[type='virtual-device-infrastructure:vnf'][name=$VNF]/state[name='ncs:ready']/status != 'not-reached'\",\n                \"delete-monitor\": \"/virtual-device-infrastructure:virtual-device-infra-status\",\n                \"delete-trigger-expr\": \"not(virtual-device-infrastructure:virtual-device-infra[name=$SITE_NAME][provider=$PROVIDER][tenant=$TENANT]/plan/component[type='virtual-device-infrastructure:vnf'][name=$VNF])\"\n              },\n              \"message\": \"-\"\n            },\n            {\n              \"name\": \"sdwan:template\",\n              \"status\": \"not-reached\",\n              \"when\": \"2020-07-31T16:59:51.113932+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/opdata/vnf-deployment-unit\",\n                \"create-trigger-expr\": \"apply-template-mode = 'NOOP' or apply-template-mode = 'SUCCESS'\"\n              },\n              \"message\": \"Not Applicable\"\n            },\n            {\n              \"name\": \"sdwan:add-controller\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:07:20.437844+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/controller-add\",\n                \"create-trigger-expr\": \"state = 'DONE'\"\n              }\n            },\n            {\n              \"name\": \"sdwan:generate-csr\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:07:52.227666+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/generate-csr\",\n                \"create-trigger-expr\": \"state = 'DONE' or state = 'FAILED'\"\n              }\n            },\n            {\n              \"name\": \"sdwan:certificate-install\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:08:48.358522+00:00\",\n              \"pre-conditions\": {\n                \"create-monitor\": \"$SERVICE/esc/vnf-info[vnf=$VNF]/vController/vcontroller-state/install-cert\",\n                \"create-trigger-expr\": \"state = 'DONE'or state = 'FAILED' \"\n              }\n            },\n            {\n              \"name\": \"tailf-ncs:ready\",\n              \"status\": \"reached\",\n              \"when\": \"2020-07-31T17:08:48.358522+00:00\"\n            }\n          ],\n          \"back-track\": false\n        }\n      ]\n    },\n    \"infrastructure\": \"esc\"\n  }\n}",
+          "scope": "local",
+          "name": "JSON",
+          "type": "datatype.string",
+          "is_required": false
+        },
+        "unique_name": "variable_workflow_01HT3VUAE3ZT02xP7wzHKGfXMogg1F3drtk",
+        "object_type": "variable_workflow"
+      }
+    ],
+    "properties": {
+      "atomic": {
+        "is_atomic": false
+      },
+      "delete_workflow_instance": false,
+      "display_name": "NSO SDWAN Demo vEdge Openstack",
+      "runtime_user": {
+        "override_target_runtime_user": false,
+        "specify_on_workflow_start": false,
+        "target_default": true
+      },
+      "target": {
+        "execute_on_target_group": false,
+        "execute_on_workflow_target": false,
+        "no_target": true,
+        "specify_on_workflow_start": false
+      }
+    },
+    "object_type": "definition_workflow",
+    "actions": [
+      {
+        "unique_name": "definition_activity_01HT3WFZBWLPH5Ndbl1ooVo1RPZeNDwe3hV",
+        "name": "HTTP Request",
+        "title": "Add sdwan-site vedge",
+        "type": "web-service.http_request",
+        "base_type": "activity",
+        "properties": {
+          "accept": "application/yang-data+json",
+          "action_timeout": 180,
+          "allow_auto_redirect": true,
+          "body": "{\n  \"sdwan:sdwan-site\": [\n    {\n      \"site-name\": \"LWR-VEDGE\",\n      \"provider\": \"Openstack-Provider\",\n      \"tenant\": \"SingleTenant\",\n      \"esc\": {\n        \"vnfm\": \"esc1\",\n        \"cisco-nfvo:vnfm-type\": \"netconf\",\n        \"vim-type\": \"openstack\",\n        \"nsd\": \"vEdge\",\n        \"deployment-flavor\": \"basic\",\n        \"vim-profile\": \"Openstack\",\n        \"vim-tenant\": \"admin\",\n        \"vnf-info\": [\n          {\n          \"vnf\": \"esc-vedge-onVC\",\n          \"type\": \"wanEdge\",\n          \"vnfm\": \"esc1\",\n          \"vnf-tenant\": \"admin\",\n          \"create-image\": \"false\",\n          \"create-flavor\": \"false\",\n          \"vnf-profile\": \"vEdge\",\n          \"vdu-profile\": \"vEdgeCloud-ESC\",\n          \"username\": \"admin\",\n          \"password\": \"Cisco321\",\n          \"wanEdge\": {\n            \"system-ip\": \"17.7.7.77\",\n            \"site-id\": \"877\",\n            \"deviceModel\": \"vEdge-Cloud\"\n          },\n          \"internal-connection-point\": {\n            \"id\": \"service\",\n            \"netconf-parameters\": {\n              \"address\": \"10.90.76.102  \"\n            }\n          },\n          \"ip\": \"10.90.76.102\",\n          \"mask\": \"255.255.255.0\",\n          \"gtw\": \"10.90.76.1\",\n          \"day-0\": {\n            \"cfg-file\": \"vedge_day0_openstack_template.cfg\"\n          }\n        }\n        ],\n        \"sap-info\": [\n          {\n          \"id\": \"mgmt\",\n          \"network-name\": \"private\"\n          },\n          {\n          \"id\": \"service\",\n          \"network-name\": \"flat-provider-network\"\n          }\n        ]\n      }\n    }\n  ]\n}",
+          "continue_on_error_status_code": false,
+          "continue_on_failure": false,
+          "custom_headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/yang-data+json"
+            }
+          ],
+          "display_name": "Add sdwan-site vedge",
+          "method": "PATCH",
+          "relative_url": "/restconf/data",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "override_workflow_target": true,
+            "target_id": "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU"
+          }
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01HT3WGT6L0RI7kPoBcnEFHQp9gClaDp4Ft",
+        "name": "Set Variables",
+        "title": "Set Ready Status to Not Ready",
+        "type": "core.set_multiple_variables",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Set Ready Status to Not Ready",
+          "skip_execution": false,
+          "variables_to_update": [
+            {
+              "variable_to_update": "$workflow.definition_workflow_01HT3VUC9GUJJ78TTyryRkqxxKOlzA9zSpC.output.variable_workflow_01HT3VUAE3RVN61ozQOWBph267obOwByhqz$",
+              "variable_value_new": 1
+            }
+          ]
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01HT3WIBVHDCB3V0lQTDC3hc890iltr6grD",
+        "name": "While Loop",
+        "title": "Get Status SDWAN - vedge (while)",
+        "type": "logic.while",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Get Status SDWAN - vedge (while)",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01HT3WJ7D67C30FKyiKmiu0NX73hgGDddes",
+            "name": "Condition Branch",
+            "title": "Condition Branch",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": {
+                  "left_operand": "$workflow.definition_workflow_01HT3VUC9GUJJ78TTyryRkqxxKOlzA9zSpC.output.variable_workflow_01HT3VUAE3RVN61ozQOWBph267obOwByhqz$",
+                  "operator": "eq",
+                  "right_operand": 1
+                },
+                "operator": "and",
+                "right_operand": {
+                  "left_operand": "$workflow.definition_workflow_01HT3VUC9GUJJ78TTyryRkqxxKOlzA9zSpC.output.variable_workflow_01HT3VUAE3XKG70YaUbnmuflE5OO7vq4962$",
+                  "operator": "lt",
+                  "right_operand": 40
+                }
+              },
+              "continue_on_failure": false,
+              "display_name": "Condition Branch",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01HT3WJVTZJXM6sxm9vwKBtpS71njoLIcbv",
+                "name": "Sleep",
+                "title": "Sleep for 30 Seconds",
+                "type": "core.sleep",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Sleep for 30 Seconds",
+                  "skip_execution": false,
+                  "sleep_interval": 30
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HT3WKNI234968x5vL1lMccOhjVrj13ym6",
+                "name": "HTTP Request",
+                "title": "Get sdwan-status - vedge",
+                "type": "web-service.http_request",
+                "base_type": "activity",
+                "properties": {
+                  "accept": "application/yang-data+json",
+                  "action_timeout": 180,
+                  "allow_auto_redirect": true,
+                  "continue_on_error_status_code": false,
+                  "continue_on_failure": false,
+                  "display_name": "Get sdwan-status - vedge",
+                  "method": "GET",
+                  "relative_url": "/restconf/data/sdwan-status/sdwan-site=LWR-VEDGE,Openstack-Provider,SingleTenant",
+                  "runtime_user": {
+                    "override_target_runtime_user": false,
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU"
+                  }
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HT3WLDWHQ1332rZjiA8osQ9G7yX4app45",
+                "name": "JSONPath Query",
+                "title": "Get Status for all componets",
+                "type": "corejava.jsonpathquery",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "continue_on_failure": false,
+                  "display_name": "Get Status for all componets",
+                  "input_json": "$activity.definition_activity_01HT3WKNI234968x5vL1lMccOhjVrj13ym6.output.response_body$",
+                  "jsonpath_queries": [
+                    {
+                      "jsonpath_query": ".plan.component[*].state[*].status",
+                      "jsonpath_query_name": "StatusArray",
+                      "jsonpath_query_type": "string"
+                    }
+                  ],
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HT3WMF5030I3v2cAHy0e744JGeyCj8hT6",
+                "name": "Trim String",
+                "title": "Remove Brackets",
+                "type": "core.trim_string",
+                "base_type": "activity",
+                "properties": {
+                  "characters_to_trim": "[]",
+                  "continue_on_failure": false,
+                  "display_name": "Remove Brackets",
+                  "skip_execution": false,
+                  "source": "$activity.definition_activity_01HT3WLDWHQ1332rZjiA8osQ9G7yX4app45.output.jsonpath_queries.StatusArray$",
+                  "trim_leading": true,
+                  "trim_trailing": true
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HT3WNE3MGQ915d0VQVNeUN32cIm7NY6bI",
+                "name": "Split String",
+                "title": "Split String",
+                "type": "core.splitstring",
+                "base_type": "activity",
+                "properties": {
+                  "boundaries": [
+                    {
+                      "boundary": ","
+                    },
+                    {
+                      "boundary": "\""
+                    }
+                  ],
+                  "continue_on_failure": false,
+                  "description": "Remove commas and quotes",
+                  "display_name": "Split String",
+                  "input_string": "$activity.definition_activity_01HT3WMF5030I3v2cAHy0e744JGeyCj8hT6.output.trimmed$",
+                  "remove_empty": true,
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HT3WO8YL8RZ2CudxkKCGBOAd7mI9wuoi9",
+                "name": "Set Variables",
+                "title": "Set Ready Status to Ready",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Set Ready Status to Ready",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01HT3VUC9GUJJ78TTyryRkqxxKOlzA9zSpC.output.variable_workflow_01HT3VUAE3RVN61ozQOWBph267obOwByhqz$",
+                      "variable_value_new": 0
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HT3WOTB0IHD2VpTmDCbqQPUGihq28yxIf",
+                "name": "For Each",
+                "title": "For Each",
+                "type": "logic.for_each",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "For Each",
+                  "skip_execution": false,
+                  "source_array": "$activity.definition_activity_01HT3WNE3MGQ915d0VQVNeUN32cIm7NY6bI.output.parts$"
+                },
+                "object_type": "definition_activity",
+                "actions": [
+                  {
+                    "unique_name": "definition_activity_01HT3WQ3VTKL65xy0ezXMm8zIm3EBSTaQLh",
+                    "name": "Condition Block",
+                    "title": "Condition Block",
+                    "type": "logic.if_else",
+                    "base_type": "activity",
+                    "properties": {
+                      "continue_on_failure": false,
+                      "display_name": "Condition Block",
+                      "skip_execution": false
+                    },
+                    "object_type": "definition_activity",
+                    "blocks": [
+                      {
+                        "unique_name": "definition_activity_01HT3WQWSBQ7L2EV0mNfP7uBCy2xemh5wDB",
+                        "name": "Condition Branch",
+                        "title": "Reached",
+                        "type": "logic.condition_block",
+                        "base_type": "activity",
+                        "properties": {
+                          "condition": {
+                            "left_operand": "$activity.definition_activity_01HT3WOTB0IHD2VpTmDCbqQPUGihq28yxIf.input.source_array[@]$",
+                            "operator": "eq",
+                            "right_operand": "reached"
+                          },
+                          "continue_on_failure": false,
+                          "display_name": "Reached",
+                          "skip_execution": false
+                        },
+                        "object_type": "definition_activity"
+                      },
+                      {
+                        "unique_name": "definition_activity_01HT3WRX215P16bAq6OBjzJSJZPKo7UUwiE",
+                        "name": "Condition Branch",
+                        "title": "Not Reached",
+                        "type": "logic.condition_block",
+                        "base_type": "activity",
+                        "properties": {
+                          "condition": {
+                            "left_operand": "$activity.definition_activity_01HT3WOTB0IHD2VpTmDCbqQPUGihq28yxIf.input.source_array[@]$",
+                            "operator": "eq",
+                            "right_operand": "not-reached"
+                          },
+                          "continue_on_failure": false,
+                          "display_name": "Not Reached",
+                          "skip_execution": false
+                        },
+                        "object_type": "definition_activity",
+                        "actions": [
+                          {
+                            "unique_name": "definition_activity_01HT3WSQDDOQA7jLQcghQM8juX4laNM9oaf",
+                            "name": "Set Variables",
+                            "title": "Set Ready Status to Not Ready",
+                            "type": "core.set_multiple_variables",
+                            "base_type": "activity",
+                            "properties": {
+                              "continue_on_failure": false,
+                              "display_name": "Set Ready Status to Not Ready",
+                              "skip_execution": false,
+                              "variables_to_update": [
+                                {
+                                  "variable_to_update": "$workflow.definition_workflow_01HT3VUC9GUJJ78TTyryRkqxxKOlzA9zSpC.output.variable_workflow_01HT3VUAE3RVN61ozQOWBph267obOwByhqz$",
+                                  "variable_value_new": 1
+                                }
+                              ]
+                            },
+                            "object_type": "definition_activity"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "unique_name": "definition_activity_01HT3WTH2IHEV1NthVfNjMBSA7fGjMvY4yY",
+                "name": "Set Variables",
+                "title": "Increment Timeout count",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Increment Timeout count",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01HT3VUC9GUJJ78TTyryRkqxxKOlzA9zSpC.output.variable_workflow_01HT3VUAE3XKG70YaUbnmuflE5OO7vq4962$",
+                      "variable_value_new": "$workflow.definition_workflow_01HT3VUC9GUJJ78TTyryRkqxxKOlzA9zSpC.output.variable_workflow_01HT3VUAE3XKG70YaUbnmuflE5OO7vq4962$ + 1"
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "unique_name": "definition_activity_01HT3WUTB5LF34YkEIkTLZolGkD0FAkCvYF",
+        "name": "Condition Block",
+        "title": "Check to Timeout Error",
+        "type": "logic.if_else",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Check to Timeout Error",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01HT3WVJI0CF15gkFQt5HrzrdbRN6qSZNyh",
+            "name": "Condition Branch",
+            "title": "Condition Branch",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$workflow.definition_workflow_01HT3VUC9GUJJ78TTyryRkqxxKOlzA9zSpC.output.variable_workflow_01HT3VUAE3XKG70YaUbnmuflE5OO7vq4962$",
+                "operator": "lt",
+                "right_operand": 40
+              },
+              "continue_on_failure": false,
+              "display_name": "Condition Branch",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity"
+          },
+          {
+            "unique_name": "definition_activity_01HT3WWAO7NQ66uVZjhigbk8Xp3qSfv91Zp",
+            "name": "Condition Branch",
+            "title": "Condition Branch",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$workflow.definition_workflow_01HT3VUC9GUJJ78TTyryRkqxxKOlzA9zSpC.output.variable_workflow_01HT3VUAE3XKG70YaUbnmuflE5OO7vq4962$",
+                "operator": "gte",
+                "right_operand": 40
+              },
+              "continue_on_failure": false,
+              "display_name": "Condition Branch",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01HT3WWYBA92P3l7mV2jqJb66t8g15gzLoC",
+                "name": "Completed",
+                "title": "Reachablity Problem",
+                "type": "logic.completed",
+                "base_type": "activity",
+                "properties": {
+                  "completion_type": "failed-completed",
+                  "continue_on_failure": false,
+                  "display_name": "Reachablity Problem",
+                  "result_message": "Unable To Reach All Components for vcontroller",
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "categories": [
+      "category_1BMfMXSnJMyt5Ihqi7rWJr5N8cf"
+    ]
+  },
+  "targets": {
+    "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU": {
+      "unique_name": "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU",
+      "name": "NSO 5.2.1.1",
+      "title": "NSO 5.2.1.1",
+      "type": "web-service.endpoint",
+      "base_type": "target",
+      "object_type": "definition_target",
+      "properties": {
+        "default_runtime_user_id": "definition_runtime_user_01HC1IIXAB3PW286QtvBJpS9pm4qreUdZM4",
+        "disable_certificate_validation": false,
+        "display_name": "NSO 5.2.1.1",
+        "host": "10.90.76.49",
+        "ignore_proxy": false,
+        "no_runtime_user": false,
+        "port": 8080,
+        "protocol": "http"
+      }
+    }
+  },
+  "runtime_users": {
+    "definition_runtime_user_01HC1IIXAB3PW286QtvBJpS9pm4qreUdZM4": {
+      "unique_name": "definition_runtime_user_01HC1IIXAB3PW286QtvBJpS9pm4qreUdZM4",
+      "name": "admin",
+      "title": "admin",
+      "type": "runtime_user.web-service_basic_credentials",
+      "base_type": "runtime_user",
+      "object_type": "definition_runtime_user",
+      "properties": {
+        "auth_option": "*****",
+        "basic_password": "*****",
+        "basic_username": "*****",
+        "display_name": "admin"
+      }
+    }
+  }
+}
