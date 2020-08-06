@@ -100,7 +100,7 @@
       {
         "unique_name": "definition_activity_01HOU96UW6SO91DpzvpFAElhcbBQZ5EdFw4",
         "name": "HTTP Request",
-        "title": "Add  sdwan-site vcontroller",
+        "title": "Add  sdwan-site Openstack vcontroller",
         "type": "web-service.http_request",
         "base_type": "activity",
         "properties": {
@@ -116,7 +116,7 @@
               "value": "application/yang-data+json"
             }
           ],
-          "display_name": "Add  sdwan-site vcontroller",
+          "display_name": "Add  sdwan-site Openstack vcontroller",
           "method": "PATCH",
           "relative_url": "/restconf/data",
           "runtime_user": {
@@ -157,11 +157,11 @@
                   "operator": "eq",
                   "right_operand": 1
                 },
-                "operator": "or",
+                "operator": "and",
                 "right_operand": {
                   "left_operand": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge$",
-                  "operator": "gt",
-                  "right_operand": 20
+                  "operator": "lt",
+                  "right_operand": 40
                 }
               },
               "continue_on_failure": false,
@@ -405,9 +405,77 @@
         ]
       },
       {
+        "unique_name": "definition_activity_01HQJNUMKCVCZ2Qe0sDib6kFpUAyIymlHwA",
+        "name": "Condition Block",
+        "title": "Check to Timeout Error",
+        "type": "logic.if_else",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Check to Timeout Error",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01HQJNV3JFGRP3I72eKho1gYW6AXoiTfWkE",
+            "name": "Condition Branch",
+            "title": "Condition Branch",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge$",
+                "operator": "lt",
+                "right_operand": 40
+              },
+              "continue_on_failure": false,
+              "display_name": "Condition Branch",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity"
+          },
+          {
+            "unique_name": "definition_activity_01HQJNV8GK6ZZ3j4o4wUcqkJ3MpGMOfqncS",
+            "name": "Condition Branch",
+            "title": "Condition Branch",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge$",
+                "operator": "gte",
+                "right_operand": 40
+              },
+              "continue_on_failure": false,
+              "display_name": "Condition Branch",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01HQJO7G3ADC31S1S1pcMn22JtHWOSFnFAM",
+                "name": "Completed",
+                "title": "Reachablity Problem",
+                "type": "logic.completed",
+                "base_type": "activity",
+                "properties": {
+                  "completion_type": "failed-completed",
+                  "continue_on_failure": false,
+                  "display_name": "Reachablity Problem",
+                  "result_message": "Unable To Reach All Components for vcontroller",
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      },
+      {
         "unique_name": "definition_activity_01HOUB7K4L5ZZ11AFF20HHennt4O96W78Hx",
         "name": "HTTP Request",
-        "title": "Add  sdwan-site vcontroller",
+        "title": "Add viptella serial numbers",
         "type": "web-service.http_request",
         "base_type": "activity",
         "properties": {
@@ -423,7 +491,7 @@
               "value": "application/yang-data+json"
             }
           ],
-          "display_name": "Add  sdwan-site vcontroller",
+          "display_name": "Add viptella serial numbers",
           "method": "POST",
           "relative_url": "/restconf/operations/devices/device=vcontroller-Site-Openstack-Provider-SingleTenant-esc-vmanage/live-status/tailf-ned-viptela-vmanage-stats:exec/upload-vedge-list",
           "runtime_user": {
@@ -507,6 +575,44 @@
         "object_type": "definition_activity"
       },
       {
+        "unique_name": "definition_activity_01HPQQSLGJ9VK4bITx1DEumQfLR35bTFYjP",
+        "name": "Set Variables",
+        "title": "Set Ready Status to Not Ready",
+        "type": "core.set_multiple_variables",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Set Ready Status to Not Ready",
+          "skip_execution": false,
+          "variables_to_update": [
+            {
+              "variable_to_update": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO59PZV76EJ5ZiShrDh6RFXgA2Yhmcewo$",
+              "variable_value_new": 1
+            }
+          ]
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01HSDJ7CBIR510YBEfZASS6rzZBtEfPMMqf",
+        "name": "Set Variables",
+        "title": "Clear Time out counter",
+        "type": "core.set_multiple_variables",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Clear Time out counter",
+          "skip_execution": false,
+          "variables_to_update": [
+            {
+              "variable_to_update": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge$",
+              "variable_value_new": 0
+            }
+          ]
+        },
+        "object_type": "definition_activity"
+      },
+      {
         "unique_name": "definition_activity_01HOUMYZ7UAIQ3a2gpTkDcOLgkPxI4KvS2Z",
         "name": "While Loop",
         "title": "Get Status SDWAN - vedge (while)",
@@ -532,11 +638,11 @@
                   "operator": "eq",
                   "right_operand": 1
                 },
-                "operator": "or",
+                "operator": "and",
                 "right_operand": {
                   "left_operand": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge$",
-                  "operator": "gt",
-                  "right_operand": 20
+                  "operator": "lt",
+                  "right_operand": 40
                 }
               },
               "continue_on_failure": false,
@@ -723,7 +829,7 @@
                           "condition": {
                             "left_operand": "$activity.definition_activity_01HOUN09DQWVZ1jAJrKxVvicLvCZeI1GcRf.input.source_array[@]$",
                             "operator": "eq",
-                            "right_operand": ""
+                            "right_operand": "not-reached"
                           },
                           "continue_on_failure": false,
                           "display_name": "Not Reached",
@@ -780,6 +886,74 @@
         ]
       },
       {
+        "unique_name": "definition_activity_01HQJVY2RBRZ369fx437k7fYbuE8R16Qzfa",
+        "name": "Condition Block",
+        "title": "Check to Timeout Error",
+        "type": "logic.if_else",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Check to Timeout Error",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01HQJVYCV47CO01ac38nfkcF2AiyEeqp5e1",
+            "name": "Condition Branch",
+            "title": "Condition Branch",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge$",
+                "operator": "lt",
+                "right_operand": 40
+              },
+              "continue_on_failure": false,
+              "display_name": "Condition Branch",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity"
+          },
+          {
+            "unique_name": "definition_activity_01HQJVYIYFJBG2Sv1qQaE3c3R0A7yr9wdVx",
+            "name": "Condition Branch",
+            "title": "Condition Branch",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge$",
+                "operator": "gte",
+                "right_operand": 40
+              },
+              "continue_on_failure": false,
+              "display_name": "Condition Branch",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01HQJVYN7A16S3RMVoDRUz5XXrYjIblYC3s",
+                "name": "Completed",
+                "title": "Reachablity Problem",
+                "type": "logic.completed",
+                "base_type": "activity",
+                "properties": {
+                  "completion_type": "failed-completed",
+                  "continue_on_failure": false,
+                  "display_name": "Reachablity Problem",
+                  "result_message": "Unable To Reach All Components for vcontroller",
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
+      },
+      {
         "unique_name": "definition_activity_01HOV2A3HK02E3fSElJdrzkxuFE2YqZjYAw",
         "name": "HTTP Request",
         "title": "Add Provider ENCS",
@@ -812,6 +986,419 @@
           }
         },
         "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01HSDOWKZD2UO6mVU5pHXnU5l6DPSunYVJB",
+        "name": "HTTP Request",
+        "title": "Sync uuids with provider ENCS",
+        "type": "web-service.http_request",
+        "base_type": "activity",
+        "properties": {
+          "accept": "application/yang-data+json",
+          "action_timeout": 180,
+          "allow_auto_redirect": true,
+          "body": "{\n  \"sdwan-actions:provider\": \"ENCS-Provider\"\n}",
+          "continue_on_error_status_code": false,
+          "continue_on_failure": false,
+          "custom_headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/yang-data+json"
+            }
+          ],
+          "display_name": "Sync uuids with provider ENCS",
+          "method": "POST",
+          "relative_url": "/restconf/data/sdwan-action/uuid/sync",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "override_workflow_target": true,
+            "target_id": "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU"
+          }
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01HT3IN4LLIB83QEQsag4XJxKx8FlmWlLmr",
+        "name": "HTTP Request",
+        "title": "Restart PNP",
+        "type": "web-service.http_request",
+        "base_type": "activity",
+        "properties": {
+          "accept": "application/yang-data+json",
+          "action_timeout": 180,
+          "allow_auto_redirect": true,
+          "body": "{\n    \"input\": \n    {\n        \"command\": \"restart\"\n    }\n}",
+          "continue_on_error_status_code": false,
+          "continue_on_failure": false,
+          "custom_headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/yang-data+json"
+            }
+          ],
+          "display_name": "Restart PNP",
+          "method": "POST",
+          "relative_url": "/restconf/operations/pnp/action",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "override_workflow_target": true,
+            "target_id": "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU"
+          }
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01HSDUBAXYFPV6kN95CCaX6KZzzYkH1JhG5",
+        "name": "HTTP Request",
+        "title": "Add sdwan-site ENCS vedge",
+        "type": "web-service.http_request",
+        "base_type": "activity",
+        "properties": {
+          "accept": "application/yang-data+json",
+          "action_timeout": 180,
+          "allow_auto_redirect": true,
+          "body": "{\n  \"sdwan:sdwan-site\": [\n    {\n      \"site-name\": \"LWR-ENCS-VEDGE\",\n      \"provider\": \"ENCS-Provider\",\n      \"tenant\": \"SingleTenant\",\n      \"nfvis\": {\n        \"nfvis-serial\": \"FGL230230NV\",\n        \"cpe-type\": \"ENCS\",\n        \"vnf-info\": [\n          {\n            \"vnf\": \"encs-vedge\",\n            \"type\": \"wanEdge\",\n            \"username\": \"admin\",\n            \"password\": \"Cisco321\",\n            \"ip\": \"10.90.76.103\",\n            \"mask\": \"255.255.255.0\",\n            \"gtw\": \"10.90.76.1\",\n            \"internal-connection-point\": [\n              {\n              \"id\": \"0\",\n              \"network\": \"wan-net\"\n              },\n              {\n               \"id\": \"1\",\n                \"network\": \"wan-net\"\n              },\n              {\n                \"id\": \"2\",\n                \"network\": \"service-net\"\n              },\n              {\n                \"id\": \"3\",\n                \"network\": \"int-mgmt-net\"\n              }\n            ],\n            \"wanEdge\": {\n              \"system-ip\": \"6.7.8.168\",\n              \"site-id\": \"1176\",\n              \"deviceModel\": \"vEdge-Cloud\"\n            },\n            \"day-0\": {\n              \"cfg-file\": \"vedge_day0_template.cfg\"\n            }\n          },\n          {\n            \"vnf\": \"encs-asav\",\n            \"type\": \"generic\",\n            \"deployment\": \"ASA-Managed\",\n            \"vnfd\": \"vBranch-ASA-1.0\",\n            \"vdu\": \"ASA\",\n            \"username\": \"admin\",\n            \"password\": \"admin\",\n            \"internal-connection-point\": {\n              \"id\": \"0\",\n              \"network\": \"int-mgmt-net\"\n            }\n          }\n        ],\n        \"sap-info\": [\n          {\n            \"id\": \"int-mgmt-net\"\n          },\n          {\n            \"id\": \"lan-net\"\n          },\n          {\n           \"id\": \"wan-net\"\n          }\n        ],\n        \"virtual-link-info\": {\n          \"id\": \"service-net\",\n          \"bridge\": \"service-br\"\n        }\n      }\n    }\n  ]\n}",
+          "continue_on_error_status_code": false,
+          "continue_on_failure": false,
+          "custom_headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/yang-data+json"
+            }
+          ],
+          "display_name": "Add sdwan-site ENCS vedge",
+          "method": "PATCH",
+          "relative_url": "/restconf/data",
+          "runtime_user": {
+            "override_target_runtime_user": false,
+            "target_default": true
+          },
+          "skip_execution": false,
+          "target": {
+            "override_workflow_target": true,
+            "target_id": "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU"
+          }
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01HSE8T3XUMUG2COIaJ0dYxofYTS7jgJ8df",
+        "name": "Set Variables",
+        "title": "Set Ready Status to Not Ready",
+        "type": "core.set_multiple_variables",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Set Ready Status to Not Ready",
+          "skip_execution": false,
+          "variables_to_update": [
+            {
+              "variable_to_update": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO59PZV76EJ5ZiShrDh6RFXgA2Yhmcewo$",
+              "variable_value_new": 1
+            }
+          ]
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01HSE9GFCO87Y66kIKDV8suG1OiTKe7X40r",
+        "name": "Set Variables",
+        "title": "Clear Time out counter",
+        "type": "core.set_multiple_variables",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Clear Time out counter",
+          "skip_execution": false,
+          "variables_to_update": [
+            {
+              "variable_to_update": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge$",
+              "variable_value_new": 0
+            }
+          ]
+        },
+        "object_type": "definition_activity"
+      },
+      {
+        "unique_name": "definition_activity_01HSDXO50F7Z94jOYueo1FFFeD6AYdTjKU7",
+        "name": "While Loop",
+        "title": "Get Status SDWAN - vedge (while)",
+        "type": "logic.while",
+        "base_type": "activity",
+        "properties": {
+          "continue_on_failure": false,
+          "display_name": "Get Status SDWAN - vedge (while)",
+          "skip_execution": false
+        },
+        "object_type": "definition_activity",
+        "blocks": [
+          {
+            "unique_name": "definition_activity_01HSDXOCF3EFE3JRPaDGo4nzp2fkwtr4GnT",
+            "name": "Condition Branch",
+            "title": "Condition Branch",
+            "type": "logic.condition_block",
+            "base_type": "activity",
+            "properties": {
+              "condition": {
+                "left_operand": {
+                  "left_operand": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO59PZV76EJ5ZiShrDh6RFXgA2Yhmcewo$",
+                  "operator": "eq",
+                  "right_operand": 1
+                },
+                "operator": "and",
+                "right_operand": {
+                  "left_operand": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge$",
+                  "operator": "lt",
+                  "right_operand": 40
+                }
+              },
+              "continue_on_failure": false,
+              "display_name": "Condition Branch",
+              "skip_execution": false
+            },
+            "object_type": "definition_activity",
+            "actions": [
+              {
+                "unique_name": "definition_activity_01HSDXOFWPH164zIKjU31BNmjfbBpQ9Zu8l",
+                "name": "Sleep",
+                "title": "Sleep for 30 Seconds",
+                "type": "core.sleep",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Sleep for 30 Seconds",
+                  "skip_execution": false,
+                  "sleep_interval": 30
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HSDXOIS9QZI2XBSU6mazP8SOlZf1jsV9g",
+                "name": "HTTP Request",
+                "title": "Get sdwan-status - ENCS vedge",
+                "type": "web-service.http_request",
+                "base_type": "activity",
+                "properties": {
+                  "accept": "application/yang-data+json",
+                  "action_timeout": 180,
+                  "allow_auto_redirect": true,
+                  "continue_on_error_status_code": false,
+                  "continue_on_failure": false,
+                  "display_name": "Get sdwan-status - ENCS vedge",
+                  "method": "GET",
+                  "relative_url": "/restconf/data/sdwan-status/sdwan-site=LWR-ENCS-VEDGE,ENCS-Provider,SingleTenant",
+                  "runtime_user": {
+                    "override_target_runtime_user": false,
+                    "target_default": true
+                  },
+                  "skip_execution": false,
+                  "target": {
+                    "override_workflow_target": true,
+                    "target_id": "definition_target_01HNBOUA7HLMD4JAU6PnxFmyTPeNn6YWiaU"
+                  }
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HSDXOMPSZ0B1JDpKhYQVu9LbKIYTVsb41",
+                "name": "JSONPath Query",
+                "title": "Get Status for all componets",
+                "type": "corejava.jsonpathquery",
+                "base_type": "activity",
+                "properties": {
+                  "action_timeout": 180,
+                  "continue_on_failure": false,
+                  "display_name": "Get Status for all componets",
+                  "input_json": "$activity.definition_activity_01HSDXOIS9QZI2XBSU6mazP8SOlZf1jsV9g.output.response_body$",
+                  "jsonpath_queries": [
+                    {
+                      "jsonpath_query": ".plan.component[*].state[*].status",
+                      "jsonpath_query_name": "StatusArray",
+                      "jsonpath_query_type": "string"
+                    }
+                  ],
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HSDXOPKMNJF37HvfjLPqGDi13v96iahXy",
+                "name": "Trim String",
+                "title": "Remove Brackets",
+                "type": "core.trim_string",
+                "base_type": "activity",
+                "properties": {
+                  "characters_to_trim": "[]",
+                  "continue_on_failure": false,
+                  "display_name": "Remove Brackets",
+                  "skip_execution": false,
+                  "source": "$activity.definition_activity_01HSDXOMPSZ0B1JDpKhYQVu9LbKIYTVsb41.output.jsonpath_queries.StatusArray$",
+                  "trim_leading": true,
+                  "trim_trailing": true
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HSDXORTX6897iyC6KPiVXyR4RTaI5xbr7",
+                "name": "Split String",
+                "title": "Split String",
+                "type": "core.splitstring",
+                "base_type": "activity",
+                "properties": {
+                  "boundaries": [
+                    {
+                      "boundary": ","
+                    },
+                    {
+                      "boundary": "\""
+                    }
+                  ],
+                  "continue_on_failure": false,
+                  "description": "Remove commas and quotes",
+                  "display_name": "Split String",
+                  "input_string": "$activity.definition_activity_01HSDXOPKMNJF37HvfjLPqGDi13v96iahXy.output.trimmed$",
+                  "remove_empty": true,
+                  "skip_execution": false
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HSDXOX3UUYH63NIlaFeB5Td2eEzD6KZfP",
+                "name": "Set Variables",
+                "title": "Set Ready Status to Ready",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Set Ready Status to Ready",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO59PZV76EJ5ZiShrDh6RFXgA2Yhmcewo$",
+                      "variable_value_new": 0
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              },
+              {
+                "unique_name": "definition_activity_01HSDXP063UHP4qbLoj1deBAgkmNybAlPtT",
+                "name": "For Each",
+                "title": "For Each",
+                "type": "logic.for_each",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "For Each",
+                  "skip_execution": false,
+                  "source_array": "$activity.definition_activity_01HSDXORTX6897iyC6KPiVXyR4RTaI5xbr7.output.parts$"
+                },
+                "object_type": "definition_activity",
+                "actions": [
+                  {
+                    "unique_name": "definition_activity_01HSDXP7ALY2S0DtmD0DqxHRZ7L9HqzUBdK",
+                    "name": "Condition Block",
+                    "title": "Condition Block",
+                    "type": "logic.if_else",
+                    "base_type": "activity",
+                    "properties": {
+                      "continue_on_failure": false,
+                      "display_name": "Condition Block",
+                      "skip_execution": false
+                    },
+                    "object_type": "definition_activity",
+                    "blocks": [
+                      {
+                        "unique_name": "definition_activity_01HSDXPAXET2T6v531RzJieE9h7rLRrghvW",
+                        "name": "Condition Branch",
+                        "title": "Reached",
+                        "type": "logic.condition_block",
+                        "base_type": "activity",
+                        "properties": {
+                          "condition": {
+                            "left_operand": "$activity.definition_activity_01HSDXP063UHP4qbLoj1deBAgkmNybAlPtT.input.source_array[@]$",
+                            "operator": "eq",
+                            "right_operand": "reached"
+                          },
+                          "continue_on_failure": false,
+                          "display_name": "Reached",
+                          "skip_execution": false
+                        },
+                        "object_type": "definition_activity"
+                      },
+                      {
+                        "unique_name": "definition_activity_01HSDXPFJQF4B5Fi4jeiJ3ydYH1ene8yRFY",
+                        "name": "Condition Branch",
+                        "title": "Not Reached",
+                        "type": "logic.condition_block",
+                        "base_type": "activity",
+                        "properties": {
+                          "condition": {
+                            "left_operand": "$activity.definition_activity_01HSDXP063UHP4qbLoj1deBAgkmNybAlPtT.input.source_array[@]$",
+                            "operator": "eq",
+                            "right_operand": "not-reached"
+                          },
+                          "continue_on_failure": false,
+                          "display_name": "Not Reached",
+                          "skip_execution": false
+                        },
+                        "object_type": "definition_activity",
+                        "actions": [
+                          {
+                            "unique_name": "definition_activity_01HSDXPMNSSKZ4lSuTpWeAK4xtQqPE9QWHV",
+                            "name": "Set Variables",
+                            "title": "Set Ready Status to Not Ready",
+                            "type": "core.set_multiple_variables",
+                            "base_type": "activity",
+                            "properties": {
+                              "continue_on_failure": false,
+                              "display_name": "Set Ready Status to Not Ready",
+                              "skip_execution": false,
+                              "variables_to_update": [
+                                {
+                                  "variable_to_update": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO59PZV76EJ5ZiShrDh6RFXgA2Yhmcewo$",
+                                  "variable_value_new": 1
+                                }
+                              ]
+                            },
+                            "object_type": "definition_activity"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "unique_name": "definition_activity_01HSDXPQ7REZI7gbOUmUxDHLAWM4UC7Bc4r",
+                "name": "Set Variables",
+                "title": "Increment Timeout count",
+                "type": "core.set_multiple_variables",
+                "base_type": "activity",
+                "properties": {
+                  "continue_on_failure": false,
+                  "display_name": "Increment Timeout count",
+                  "skip_execution": false,
+                  "variables_to_update": [
+                    {
+                      "variable_to_update": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge$",
+                      "variable_value_new": "$workflow.definition_workflow_01HO4JZZQT1FS5cIahOhIfbuBAgWJ3LYmQP.output.variable_workflow_01HO6LQ26VPUL7k4dB0MMYfpT8e3DJWb6ge$ + 1"
+                    }
+                  ]
+                },
+                "object_type": "definition_activity"
+              }
+            ]
+          }
+        ]
       }
     ],
     "categories": [
